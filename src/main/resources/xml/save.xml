@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_131" class="java.beans.XMLDecoder">
+ <string>&lt;game.model.Characters.characters.Berserk&gt;
+  &lt;random serialization=&quot;custom&quot;&gt;
+    &lt;java.util.Random&gt;
+      &lt;default&gt;
+        &lt;seed&gt;21927983839839&lt;/seed&gt;
+        &lt;nextNextGaussian&gt;0.0&lt;/nextNextGaussian&gt;
+        &lt;haveNextNextGaussian&gt;false&lt;/haveNextNextGaussian&gt;
+      &lt;/default&gt;
+    &lt;/java.util.Random&gt;
+  &lt;/random&gt;
+  &lt;name&gt;Gragas&lt;/name&gt;
+  &lt;agility&gt;10&lt;/agility&gt;
+  &lt;intelligence&gt;11&lt;/intelligence&gt;
+  &lt;power&gt;23&lt;/power&gt;
+  &lt;experience&gt;0.0&lt;/experience&gt;
+  &lt;level&gt;1&lt;/level&gt;
+  &lt;baseDamage&gt;161&lt;/baseDamage&gt;
+  &lt;hitPoint&gt;111&lt;/hitPoint&gt;
+  &lt;mana&gt;55&lt;/mana&gt;
+  &lt;inventory/&gt;
+  &lt;equipmentItems/&gt;
+  &lt;defence&gt;0&lt;/defence&gt;
+  &lt;magicPoint&gt;0&lt;/magicPoint&gt;
+  &lt;multiplierAgility&gt;3&lt;/multiplierAgility&gt;
+  &lt;multiplierIntelligence&gt;5&lt;/multiplierIntelligence&gt;
+  &lt;multiplierPower&gt;7&lt;/multiplierPower&gt;
+  &lt;expToNextLevel&gt;30&lt;/expToNextLevel&gt;
+  &lt;gold&gt;0&lt;/gold&gt;
+  &lt;count&gt;0&lt;/count&gt;
+  &lt;additionPower&gt;0&lt;/additionPower&gt;
+  &lt;additionIntelligence&gt;0&lt;/additionIntelligence&gt;
+  &lt;additionAgility&gt;0&lt;/additionAgility&gt;
+&lt;/game.model.Characters.characters.Berserk&gt;</string>
+</java>
