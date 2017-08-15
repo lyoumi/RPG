@@ -51,7 +51,7 @@ public class Archer implements Character, UsingItems, Equipment{
     private int magicPoint;
     private final int multiplierAgility = 2;
     private final int multiplierIntelligence = 11;
-    private final int multiplierPower = 6;
+    private final int multiplierPower = 7;
     private int expToNextLevel = 30;
     private int gold;
     private int count;

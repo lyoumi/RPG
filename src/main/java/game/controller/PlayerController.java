@@ -241,19 +241,14 @@ public class PlayerController {
                 } else {
                     if (random.nextInt(10000000) == 9999999) {
                         Monster monster = spawn(character);
-                        if (monster instanceof Boss) {
-                            while (character.getHitPoint() < character.getMaxHitPoint()) {
-                                if (!autoHeal()) break battle;
-                            }
-                        }
+                        if (monster instanceof Boss) while (character.getHitPoint() < character.getMaxHitPoint())
+                            if (!autoHeal()) break battle;
                         Text boss = new Text("   info: battle began with " + monster.toString());
                         boss.setFill(Color.ORANGERED);
-                        Platform.runLater(() -> {
-                            messageBox.getChildren().add(boss);
-                        });
+                        Platform.runLater(() -> messageBox.getChildren().add(boss));
                         do {
                             updateScreen();
-                            if (character.getHitPoint() <= character.getMaxHitPoint() / 2) {
+                            if (character.getHitPoint() <= character.getMaxHitPoint() / 4 * 3) {
                                 if (!autoHeal()) break;
                             }
                             updateScreen();
@@ -263,12 +258,12 @@ public class PlayerController {
                         } while (true);
                         updateScreen();
                         endEvent(character, monster, true);
-                        checkNewMagicPoint();
                         try {
                             monster.finalize();
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
+                        if(checkNewMagicPoint()) break;
                     }
                 }
             }
@@ -401,29 +396,32 @@ public class PlayerController {
          * Метод проверяющий наличие неиспользованных очков навыков и реализующий их распределение.
          *
          */
-        private void checkNewMagicPoint() {
-            while (character.getMagicPoint() != 0) {
-                Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You have " + character.getMagicPoint())));
-                Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You can upgrade your skills " +
-                        (MagicStyle.getMagicStyle(character)) + " by index...")));
-                while (!canTakeMessage) {
-                    System.out.print("");
-                }
-                String choice = getChoice();
-                if (choice.equals("1") || choice.equals("2") || choice.equals("3")) {
-                    Integer c = Integer.valueOf(choice);
-                    c = --c;
+        private boolean checkNewMagicPoint() {
+            if (character.getMagicPoint() != 0){
+                while (character.getMagicPoint() != 0) {
+                    Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You have " + character.getMagicPoint())));
+                    Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You can upgrade your skills " +
+                            (MagicStyle.getMagicStyle(character)) + " by index...")));
+                    while (!canTakeMessage) {
+                        System.out.print("");
+                    }
+                    String choice = getChoice();
+                    if (choice.equals("1") || choice.equals("2") || choice.equals("3")) {
+                        Integer c = Integer.valueOf(choice);
+                        c = --c;
                         MagicStyle.getMagicStyle(character).get(c).setDamage();
                         character.setMagicPoint(character.getMagicPoint() - 1);
                         Integer finalC = c;
                         Platform.runLater(() -> messageBox.getChildren().add(new Text(MagicStyle.getMagicStyle(character).get(finalC) + " was upgraded")));
                         break;
-                } else Platform.runLater(() -> {
-                    Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
-                    notCorrectChoice.setFill(Color.RED);
-                    messageBox.getChildren().add(notCorrectChoice);
-                });
-            }
+                    } else Platform.runLater(() -> {
+                        Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
+                        notCorrectChoice.setFill(Color.RED);
+                        messageBox.getChildren().add(notCorrectChoice);
+                    });
+                }
+                return true;
+            } else return false;
         }
 
         /**

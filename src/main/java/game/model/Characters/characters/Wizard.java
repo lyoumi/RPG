@@ -51,7 +51,7 @@ public class Wizard implements Character, Equipment, UsingItems {
     private int magicPoint;
     private final int multiplierAgility = 2;
     private final int multiplierIntelligence = 11;
-    private final int multiplierPower = 5;
+    private final int multiplierPower = 6;
     private int expToNextLevel = 30;
     private int gold;
     private int count;
