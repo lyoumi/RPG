@@ -5,6 +5,9 @@ import game.model.Characters.characters.Archer;
 import game.model.Characters.characters.Berserk;
 import game.model.Items.items.HealingItems;
 import game.model.Items.items.Item;
+import game.model.Items.items.armors.armors.LegendaryArmor;
+import game.model.Items.items.armors.boots.LegendaryBoots;
+import game.model.Items.items.armors.helmets.LegendaryHelmet;
 import game.model.Items.items.heal.healHitPoint.items.BigHPBottle;
 import game.model.Items.items.heal.healManaPoint.items.BigFlower;
 import game.model.Items.items.weapons.weapons.archer.LegendaryBow;
@@ -63,6 +66,9 @@ public class SimpleTrader implements Trader {
         if (character instanceof Archer) priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryBow.itemsFactory.createNewItem(character));
         else if (character instanceof Berserk) priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryBoxingGloves.itemsFactory.createNewItem(character));
         else priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryStaff.itemsFactory.createNewItem(character));
+        priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryHelmet.itemsFactory.createNewItem(character));
+        priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryBoots.itemsFactory.createNewItem(character));
+        priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryArmor.itemsFactory.createNewItem(character));
         priceListHealingObjects.put(randomUniqueValue.nextUniqueInt(), BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
         priceListHealingObjects.put(randomUniqueValue.nextUniqueInt(), BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
     }

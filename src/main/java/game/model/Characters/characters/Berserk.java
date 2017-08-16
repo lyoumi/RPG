@@ -42,7 +42,6 @@ public class Berserk implements Character, UsingItems, Equipment {
     private int baseDamage = getPower()*getMultiplierPower();
     private int hitPoint = getPower()*getMultiplierPower();
     private int mana = getIntelligence()*getMultiplierIntelligence();
-//    private ArrayList<HealingItems> inventory = new ArrayList<>();
     private Map<EquipmentItems, Item> equipmentItems = new HashMap<>();
     private Weapons weapon;
     private Armor armor;
@@ -129,9 +128,12 @@ public class Berserk implements Character, UsingItems, Equipment {
         return experience;
     }
 
-    private void setExperience(double experience) {
-        this.experience += experience;
-        changeLevel();
+    private boolean setExperience(double experience) {
+        if ((this.experience += experience) < Integer.MAX_VALUE){
+            this.experience += experience;
+            changeLevel();
+            return false;
+        } else return true;
     }
 
     public double expToNextLevel() {
@@ -326,8 +328,8 @@ public class Berserk implements Character, UsingItems, Equipment {
     }
 
     @Override
-    public void experienceDrop(double experience){
-        setExperience(experience);
+    public boolean experienceDrop(double experience){
+        return setExperience(experience);
     }
 
     @Override
@@ -398,11 +400,6 @@ public class Berserk implements Character, UsingItems, Equipment {
     public int getMaxManaPoint() {
         return getIntelligence()*getMultiplierIntelligence();
     }
-
-//    @Override
-//    public ArrayList<HealingItems> getInventory() {
-//        return inventory;
-//    }
 
     @Override
     public boolean add(HealingItems item) {
@@ -545,13 +542,13 @@ public class Berserk implements Character, UsingItems, Equipment {
 
     @Override
     public boolean healManaPoint() {
-        if (isHealingBigHitPointBottle()){
+        if (isHealingBigManaPointBottle()){
             use(BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
             return true;
-        } else if (isHealingMiddleHitPointBottle()){
+        } else if (isHealingMiddleManaPointBottle()){
             use(MiddleFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
             return true;
-        } else if (isHealingSmallHitPointBottle()){
+        } else if (isHealingSmallManaPointBottle()){
             use(SmallFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
             return true;
         } else return false;

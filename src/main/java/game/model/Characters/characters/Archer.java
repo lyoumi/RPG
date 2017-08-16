@@ -42,7 +42,6 @@ public class Archer implements Character, UsingItems, Equipment{
     private int baseDamage = getAgility()*getMultiplierAgility();
     private int hitPoint = getPower()*getMultiplierPower();
     private int mana = getIntelligence()*getMultiplierIntelligence();
-    private ArrayList<HealingItems> inventory = new ArrayList<>();
     private Map<EquipmentItems, Item> equipmentItems = new HashMap<>();
     private Weapons weapon;
     private Armor armor;
@@ -94,9 +93,12 @@ public class Archer implements Character, UsingItems, Equipment{
         return experience;
     }
 
-    private void setExperience(double experience) {
-        this.experience += experience;
-        changeLevel();
+    private boolean setExperience(double experience) {
+        if ((this.experience += experience) < Integer.MAX_VALUE){
+            this.experience += experience;
+            changeLevel();
+            return false;
+        } else return true;
     }
 
     public double expToNextLevel() {
@@ -286,8 +288,8 @@ public class Archer implements Character, UsingItems, Equipment{
     }
 
     @Override
-    public void experienceDrop(double experience){
-        setExperience(experience);
+    public boolean experienceDrop(double experience){
+        return setExperience(experience);
     }
 
     @Override
@@ -518,12 +520,30 @@ public class Archer implements Character, UsingItems, Equipment{
 
     @Override
     public boolean healHitPoint() {
-        return isHealingBigHitPointBottle() || isHealingMiddleHitPointBottle() || isHealingSmallHitPointBottle();
+        if (isHealingBigHitPointBottle()){
+            use(BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else if (isHealingMiddleHitPointBottle()){
+            use(MiddleHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else if (isHealingSmallHitPointBottle()){
+            use(SmallHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else return false;
     }
 
     @Override
     public boolean healManaPoint() {
-        return isHealingBigManaPointBottle() || isHealingMiddleManaPointBottle() || isHealingSmallManaPointBottle();
+        if (isHealingBigManaPointBottle()){
+            use(BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else if (isHealingMiddleManaPointBottle()){
+            use(MiddleFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else if (isHealingSmallManaPointBottle()){
+            use(SmallFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else return false;
     }
 
     @Override

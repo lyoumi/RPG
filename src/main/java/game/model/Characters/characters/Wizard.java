@@ -42,7 +42,6 @@ public class Wizard implements Character, Equipment, UsingItems {
     private int baseDamage = getIntelligence()*getMultiplierIntelligence();
     private int hitPoint = getPower()*getMultiplierPower();
     private int mana = getIntelligence()*getMultiplierIntelligence();
-    private ArrayList<HealingItems> inventory = new ArrayList<>();
     private Map<EquipmentItems, Item> equipmentItems = new HashMap<>();
     private Weapons weapon;
     private Armor armor;
@@ -50,8 +49,8 @@ public class Wizard implements Character, Equipment, UsingItems {
     private Magic magic;
     private int magicPoint;
     private final int multiplierAgility = 2;
-    private final int multiplierIntelligence = 11;
-    private final int multiplierPower = 6;
+    private final int multiplierIntelligence = 10;
+    private final int multiplierPower = 5;
     private int expToNextLevel = 30;
     private int gold;
     private int count;
@@ -94,9 +93,12 @@ public class Wizard implements Character, Equipment, UsingItems {
         return experience;
     }
 
-    private void setExperience(double experience) {
-        this.experience += experience;
-        changeLevel();
+    private boolean setExperience(double experience) {
+        if ((this.experience += experience) < Integer.MAX_VALUE){
+            this.experience += experience;
+            changeLevel();
+            return false;
+        } else return true;
     }
 
     public double expToNextLevel() {
@@ -201,8 +203,8 @@ public class Wizard implements Character, Equipment, UsingItems {
         setAdditionIntelligence();
         setAdditionPower();
         setHitPoint(getPower()*getMultiplierPower());
-        setDamage(getAgility()*getMultiplierIntelligence());
-        setManaPoint(getAgility()*getMultiplierIntelligence());
+        setDamage(getIntelligence()*getMultiplierIntelligence());
+        setManaPoint(getIntelligence()*getMultiplierIntelligence());
     }
 
     private boolean isHealingBigHitPointBottle(){
@@ -286,8 +288,8 @@ public class Wizard implements Character, Equipment, UsingItems {
     }
 
     @Override
-    public void experienceDrop(double experience){
-        setExperience(experience);
+    public boolean experienceDrop(double experience){
+        return setExperience(experience);
     }
 
     @Override
@@ -394,57 +396,53 @@ public class Wizard implements Character, Equipment, UsingItems {
     @Override
     public boolean add(HealingItems item) {
         if (item instanceof HealingManaPointItems) {
-            if (checkCountManaPointBottle() < 50) {
-                if (item instanceof BigFlower) {
-                    countOfBigFlower++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                } else if (item instanceof MiddleFlower) {
-                    countOfMiddleFlower++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                } else {
-                    countOfSmallFlower++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
+            if (item instanceof BigFlower) {
+                countOfBigFlower++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
-                return true;
-            } else return false;
+            } else if (item instanceof MiddleFlower) {
+                countOfMiddleFlower++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else {
+                countOfSmallFlower++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+            return true;
         } else if (item instanceof HealingHitPointItems) {
-            if (checkCountHealHitPoint() < 50) {
-                if (item instanceof BigHPBottle) {
-                    countOfBigHitPointBottle++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                } else if (item instanceof MiddleHPBottle) {
-                    countOfMiddleHitPointBottle++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                } else {
-                    countOfSmallHitPointBottle++;
-                    try {
-                        item.finalize();
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
+            if (item instanceof BigHPBottle) {
+                countOfBigHitPointBottle++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
-                return true;
-            } else return false;
+            } else if (item instanceof MiddleHPBottle) {
+                countOfMiddleHitPointBottle++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else {
+                countOfSmallHitPointBottle++;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+            return true;
         } else return false;
     }
 
@@ -532,13 +530,13 @@ public class Wizard implements Character, Equipment, UsingItems {
 
     @Override
     public boolean healManaPoint() {
-        if (isHealingBigHitPointBottle()){
+        if (isHealingBigManaPointBottle()){
             use(BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
             return true;
-        } else if (isHealingMiddleHitPointBottle()){
+        } else if (isHealingMiddleManaPointBottle()){
             use(MiddleFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
             return true;
-        } else if (isHealingSmallHitPointBottle()){
+        } else if (isHealingSmallManaPointBottle()){
             use(SmallFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
             return true;
         } else return false;

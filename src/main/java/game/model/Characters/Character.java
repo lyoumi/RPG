@@ -143,7 +143,7 @@ public interface Character extends Serializable{
      * @param experience
      *          new amount of experience.
      */
-    void experienceDrop(double experience);
+    boolean experienceDrop(double experience);
 
     /**
      * Метод, возвращающий текущий уровень героя.

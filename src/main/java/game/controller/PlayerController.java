@@ -251,7 +251,7 @@ public class PlayerController {
                                 if (!autoHeal()) break;
                             }
                             updateScreen();
-                            punch(monster);
+                            if (!punch(monster)) break battle;
                             if (monster.isDead()) break;
                             if (character.getHitPoint() == 0) exit();
                         } while (true);
@@ -499,13 +499,24 @@ public class PlayerController {
          *
          * @param monster   Monster implementation of {@link Monster}
          */
-        private void punch(Monster monster) {
+        private boolean punch(Monster monster) {
+            if (character instanceof Wizard){
+                if (character.getManaPoint() > 0)
+                    character.setManaPoint(character.getManaPoint() - 1);
+                else {
+                    if (character.healManaPoint()) {
+                        character.setManaPoint(character.getManaPoint() - 1);
+                        return true;
+                    } else return false;
+                }
+            }
             monster.setHitPoint((monster.getHitPoint() - monster.applyDamage(character.getDamage())));
             character.setHitPoint((character.getHitPoint() - character.applyDamage(monster.getDamageForBattle())));
             Text monsterInfo = new Text("   info: " + monster.toString());
             monsterInfo.setFill(Color.ORANGERED);
             Platform.runLater(() -> messageBox.getChildren().add(monsterInfo));
             updateScreen();
+            return true;
         }
 
         /**
@@ -643,7 +654,7 @@ public class PlayerController {
         private boolean drop(Character character, Monster monster, boolean autoDrop) {
 
             if (autoDrop) {
-                character.experienceDrop(monster.getExperience());
+                if (character.experienceDrop(monster.getExperience())) exit();
                 ((UsingItems) character).add(monster.getInventory().pollLast());
                 character.setGold(character.getGold() + monster.getDroppedGold());
                 Map<EquipmentItems, Item> droppedEquipment = monster.getDroppedItems();
@@ -719,7 +730,7 @@ public class PlayerController {
                             if (Objects.equals(exit, "No") || droppedEquipment.isEmpty()) break;
                         }
                 }
-                character.experienceDrop(monster.getExperience());
+                if (character.experienceDrop(monster.getExperience())) exit();
                 Platform.runLater(() -> {
                     Text viewFoundedHealingItems = new Text("   info: You can add to your inventory " + monster.getInventory());
                     viewFoundedHealingItems.setFill(Color.GREEN);
