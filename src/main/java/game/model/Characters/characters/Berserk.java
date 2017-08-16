@@ -37,7 +37,7 @@ public class Berserk implements Character, UsingItems, Equipment {
     private int agility = 10;
     private int intelligence = 11;
     private int power = 23;
-    private double experience = 0;
+    private long experience = 0;
     private int level = 1;
     private int baseDamage = getPower()*getMultiplierPower();
     private int hitPoint = getPower()*getMultiplierPower();

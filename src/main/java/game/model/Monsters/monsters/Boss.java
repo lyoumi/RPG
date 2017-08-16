@@ -48,10 +48,18 @@ public class Boss implements Monster {
             hitPoint = (level)*750;
             damage = (level)*120;
             experience = 1000 * 2;
-        } else {
+        } else if (character.getLevel() == 12){
             hitPoint = (level)*1000;
             damage = (level)*150;
             experience = 1000 * character.getLevel() * 3;
+        } else if (character.getLevel() == 15){
+            hitPoint = (level)*1250;
+            damage = (level)*200;
+            experience = 1000 * character.getLevel() * 6;
+        } else {
+            hitPoint = (level)*1500;
+            damage = (level)*250;
+            experience = 1000 * character.getLevel() * 9;
         }
         setEquipmentOfDevil(character);
         itemsList = SimpleMonsterEquipment.monsterEquipmentFactory.getMonsterEquipment().initializeItemList();

@@ -37,7 +37,7 @@ public class Archer implements Character, UsingItems, Equipment{
     private int agility = 22;
     private int intelligence = 13;
     private int power = 11;
-    private double experience;
+    private long experience;
     private int level = 1;
     private int baseDamage = getAgility()*getMultiplierAgility();
     private int hitPoint = getPower()*getMultiplierPower();

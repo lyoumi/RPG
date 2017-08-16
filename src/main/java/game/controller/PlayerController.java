@@ -1,6 +1,7 @@
 package game.controller;
 
 import com.thoughtworks.xstream.XStream;
+import ext.ExtendedText;
 import game.model.Characters.Character;
 import game.model.Characters.characters.Archer;
 import game.model.Characters.characters.Berserk;
@@ -110,12 +111,22 @@ public class PlayerController {
             while (true) {
                 Monster monster = spawn(character);
                 String monsterInfo = "\n   info: Battle began with " + monster;
-                Text viewMonsterInformation = new Text(monsterInfo);
+                ExtendedText viewMonsterInformation = new ExtendedText(monsterInfo);
                 Platform.runLater(() -> messageBox.getChildren().add(viewMonsterInformation));
+                try {
+                    viewMonsterInformation.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 String resultOfBattle = manualBattle(monster);
                 endEvent(character, monster, false);
-                Text resultOfBattleView = new Text("   info: " + resultOfBattle);
+                ExtendedText resultOfBattleView = new ExtendedText("   info: " + resultOfBattle);
                 Platform.runLater(() -> messageBox.getChildren().add(resultOfBattleView));
+                try {
+                    resultOfBattleView.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 checkNewMagicPoint();
                 nextChoice();
             }
@@ -226,25 +237,36 @@ public class PlayerController {
             battle:
             while (!Objects.equals(getChoice(), "break")) {
                 if (character.getCountOfHealingItems() < 5) {
-                    Platform.runLater(() -> {
-                        Text walkingBeginning = new Text("   info: I need go walk.... Pls, wait some time, I will be back\n" + character.toString());
-                        walkingBeginning.setFill(Color.DARKBLUE);
-                        messageBox.getChildren().add(walkingBeginning);
-                    });
+                    ExtendedText walkingBeginning = new ExtendedText("   info: I need go walk.... Pls, wait some time, I will be back\n" + character.toString());
+                    walkingBeginning.setFill(Color.DARKBLUE);
+                    Platform.runLater(() -> messageBox.getChildren().add(walkingBeginning));
+                    try {
+                        walkingBeginning.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     String walkingResults = walking();
-                    Text viewWalkingResult = new Text(walkingResults);
+                    ExtendedText viewWalkingResult = new ExtendedText(walkingResults);
                     viewWalkingResult.setFill(Color.DARKBLUE);
-                    Platform.runLater(() -> {
-                        messageBox.getChildren().add(viewWalkingResult);
-                    });
+                    Platform.runLater(() -> messageBox.getChildren().add(viewWalkingResult));
+                    try {
+                        viewWalkingResult.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 } else {
                     if (random.nextInt(10000000) == 9999999) {
                         Monster monster = spawn(character);
                         if (monster instanceof Boss) while (character.getHitPoint() < character.getMaxHitPoint())
                             if (!autoHeal()) break battle;
-                        Text boss = new Text("   info: battle began with " + monster.toString());
+                        ExtendedText boss = new ExtendedText("   info: battle began with " + monster.toString());
                         boss.setFill(Color.ORANGERED);
                         Platform.runLater(() -> messageBox.getChildren().add(boss));
+                        try {
+                            boss.finalize();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         do {
                             updateScreen();
                             if (character.getHitPoint() < character.getMaxHitPoint() / 4 * 3) {
@@ -277,11 +299,14 @@ public class PlayerController {
             market:
             while (true) {
                 updateChoiceBox(" equipment", " items", " exit");
-                Text viewWelcomeSpeech = new Text("\n   info: Hello my friend! Look at my priceList: enter equipment, items or exit for exit from market....");
+                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList: enter equipment, items or exit for exit from market....");
                 viewWelcomeSpeech.setFill(Color.BLUEVIOLET);
-                Platform.runLater(() -> {
-                    messageBox.getChildren().add(viewWelcomeSpeech);
-                });
+                Platform.runLater(() -> messageBox.getChildren().add(viewWelcomeSpeech));
+                try {
+                    viewWelcomeSpeech.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 while (!canTakeMessage) {
                     System.out.print("");
                 }
@@ -295,7 +320,7 @@ public class PlayerController {
                         }
                         Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, make your choice or enter 0 for exit....")));
                         while (true) {
-                            updateChoiceBox(" id", " 0");
+                            updateChoiceBox(" id", " buy all"," 0");
                             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, enter id....")));
                             while (!canTakeMessage) {
                                 System.out.print("");
@@ -309,18 +334,47 @@ public class PlayerController {
                                         character.setGold(character.getGold() - trader.getPriceListEquipmentObjects().get(id).getPrice());
                                         ((Equipment) character).equip(trader.getEquipmentItem(id));
                                         updateScreen();
-                                    } else Platform.runLater(() -> {
-                                        Text viewNotEnoughOfMoney = new Text("   info: Not enough of money!");
+                                    } else {
+                                        ExtendedText viewNotEnoughOfMoney = new ExtendedText("   info: Not enough of money!");
                                         viewNotEnoughOfMoney.setFill(Color.RED);
-                                        messageBox.getChildren().add(viewNotEnoughOfMoney);
-                                    });
+                                        Platform.runLater(() -> messageBox.getChildren().add(viewNotEnoughOfMoney));
+                                        try {
+                                            viewNotEnoughOfMoney.finalize();
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                    }
                                     break;
                                 } else if (id == 0) break;
-                            } else Platform.runLater(() -> {
-                                Text notCorrectId = new Text("   info: Pls, enter correct id....");
+                            } else if (Objects.equals(stringId, "buy all")){
+                                for (Map.Entry<Integer, Item> entry :
+                                        trader.getPriceListEquipmentObjects().entrySet()) {
+                                    if (character.getGold()  > entry.getValue().getPrice()){
+                                        character.setGold(character.getGold() - entry.getValue().getPrice());
+                                        ((Equipment) character).equip(entry.getValue());
+                                        updateScreen();
+                                    } else {
+                                        ExtendedText notCorrectId = new ExtendedText("   info: Not enough of money....");
+                                        notCorrectId.setFill(Color.RED);
+                                        Platform.runLater(() -> messageBox.getChildren().add(notCorrectId));
+                                        try {
+                                            notCorrectId.finalize();
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                ExtendedText notCorrectId = new ExtendedText("   info: Pls, enter correct id....");
                                 notCorrectId.setFill(Color.RED);
-                                messageBox.getChildren().add(notCorrectId);
-                            });
+                                Platform.runLater(() -> messageBox.getChildren().add(notCorrectId));
+                                try {
+                                    notCorrectId.finalize();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            }
                         }
                         break;
                     }
@@ -357,37 +411,53 @@ public class PlayerController {
                                                 updateScreen();
                                                 break;
                                             } else {
-                                                Platform.runLater(() -> {
-                                                    Text viewNotEnoughOfMoney = new Text("   info: Not enough of money! Pls, enter another count....");
-                                                    viewNotEnoughOfMoney.setFill(Color.RED);
-                                                    messageBox.getChildren().add(viewNotEnoughOfMoney);
-                                                });
+                                                ExtendedText viewNotEnoughOfMoney = new ExtendedText("   info: Not enough of money! Pls, enter another count....");
+                                                viewNotEnoughOfMoney.setFill(Color.RED);
+                                                Platform.runLater(() -> messageBox.getChildren().add(viewNotEnoughOfMoney));
+                                                try {
+                                                    viewNotEnoughOfMoney.finalize();
+                                                } catch (Throwable throwable) {
+                                                    throwable.printStackTrace();
+                                                }
                                             }
-                                        } else Platform.runLater(() -> {
-                                            Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
+                                        } else {
+                                            ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
                                             notCorrectChoice.setFill(Color.RED);
-                                            messageBox.getChildren().add(notCorrectChoice);
-                                        });
+                                            Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                                            try {
+                                                notCorrectChoice.finalize();
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
+                                        }
 
                                     }
                                     break;
                                 } else if (id == 0) break;
-                            } else Platform.runLater(() -> {
-                                Text notCorrectId = new Text("   info: Pls, enter correct id....");
+                            } else {
+                                ExtendedText notCorrectId = new ExtendedText("   info: Pls, enter correct id....");
                                 notCorrectId.setFill(Color.RED);
-                                messageBox.getChildren().add(notCorrectId);
-                            });
+                                Platform.runLater(() -> messageBox.getChildren().add(notCorrectId));
+                                try {
+                                    notCorrectId.finalize();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            }
                         }
                         break;
                     }
                     case "exit":
                         break market;
                     default:
-                        Platform.runLater(() -> {
-                            Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
-                            notCorrectChoice.setFill(Color.RED);
-                            messageBox.getChildren().add(notCorrectChoice);
-                        });
+                        ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
+                        notCorrectChoice.setFill(Color.RED);
+                        Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                        try {
+                            notCorrectChoice.finalize();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                 }
             }
         }
@@ -414,11 +484,16 @@ public class PlayerController {
                         Integer finalC = c;
                         Platform.runLater(() -> messageBox.getChildren().add(new Text(MagicStyle.getMagicStyle(character).get(finalC) + " was upgraded")));
                         break;
-                    } else Platform.runLater(() -> {
-                        Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
+                    } else {
+                        ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
                         notCorrectChoice.setFill(Color.RED);
-                        messageBox.getChildren().add(notCorrectChoice);
-                    });
+                        Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                        try {
+                            notCorrectChoice.finalize();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
                 }
                 return true;
             } else return false;
@@ -431,12 +506,15 @@ public class PlayerController {
          */
         private void useMagic(Monster monster) {
             ArrayList<Magic> magics = MagicStyle.getMagicStyle(character);
-            Text viewSelectMagic = new Text("   info: Select magic: " + magics);
+            ExtendedText viewSelectMagic = new ExtendedText("   info: Select magic: " + magics);
             updateChoiceBox("1", "2", "3");
             viewSelectMagic.setFill(Color.BLUE);
-            Platform.runLater(() -> {
-                messageBox.getChildren().add(viewSelectMagic);
-            });
+            Platform.runLater(() -> messageBox.getChildren().add(viewSelectMagic));
+            try {
+                viewSelectMagic.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             while (true) {
                 while (!canTakeMessage) {
                     System.out.print("");
@@ -462,11 +540,16 @@ public class PlayerController {
                             break;
                         }
                     }
-                } else Platform.runLater(() -> {
-                    Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
+                } else {
+                    ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
                     notCorrectChoice.setFill(Color.RED);
-                    messageBox.getChildren().add(notCorrectChoice);
-                });
+                    Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                    try {
+                        notCorrectChoice.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
             }
         }
 
@@ -482,11 +565,14 @@ public class PlayerController {
                 character.experienceDrop(0.0000001);
                 if (random.nextInt(10000000) == 999999) {
                     HealingItems item = itemsList.get(random.nextInt(sizeOfItems));
-                    Platform.runLater(() -> {
-                        Text viewFoundedInfo = new Text("   info: I found " + item);
-                        viewFoundedInfo.setFill(Color.GREEN);
-                        messageBox.getChildren().add(viewFoundedInfo);
-                    });
+                    ExtendedText viewFoundedInfo = new ExtendedText("   info: I found " + item);
+                    viewFoundedInfo.setFill(Color.GREEN);
+                    Platform.runLater(() -> messageBox.getChildren().add(viewFoundedInfo));
+                    try {
+                        viewFoundedInfo.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     ((UsingItems)character).add(item);
                     updateScreen();
                 }
@@ -502,20 +588,27 @@ public class PlayerController {
         private boolean punch(Monster monster) {
             if (character instanceof Wizard){
                 if (character.getManaPoint() > 0)
-                    character.setManaPoint(character.getManaPoint() - 1);
+                    character.setManaPoint(character.getManaPoint() - 10);
                 else {
                     if (character.healManaPoint()) {
-                        character.setManaPoint(character.getManaPoint() - 1);
+                        character.setManaPoint(character.getManaPoint() - 10);
                         return true;
                     } else return false;
                 }
             }
             monster.setHitPoint((monster.getHitPoint() - monster.applyDamage(character.getDamage())));
             character.setHitPoint((character.getHitPoint() - character.applyDamage(monster.getDamageForBattle())));
-            Text monsterInfo = new Text("   info: " + monster.toString());
-            monsterInfo.setFill(Color.ORANGERED);
-            Platform.runLater(() -> messageBox.getChildren().add(monsterInfo));
+            ExtendedText extendedText = new ExtendedText("   info: " + monster.toString());
+            extendedText.setFill(Color.ORANGERED);
+//            Text monsterInfo = new Text("   info: " + monster.toString());
+//            monsterInfo.setFill(Color.ORANGERED);
+            Platform.runLater(() -> messageBox.getChildren().add(extendedText));
             updateScreen();
+            try {
+                extendedText.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             return true;
         }
 
@@ -780,12 +873,20 @@ public class PlayerController {
                 } else {
                     newMonster = MediumBot.monsterFactory.createNewMonster(character);
                 }
-            } else {
+            } else if ((character.getLevel() > 8) && (character.getLevel() < 12)){
                 if ((chance > 0) && (chance < 25)) {
                     newMonster = VeryHardBot.monsterFactory.createNewMonster(character);
                 } else {
                     newMonster = HardBot.monsterFactory.createNewMonster(character);
                 }
+            } else if ((character.getLevel() > 12) && (character.getLevel() < 15)){
+                if ((chance > 0) && (chance < 25)) {
+                    newMonster = UltraHardBot.monsterFactory.createNewMonster(character);
+                } else {
+                    newMonster = VeryHardBot.monsterFactory.createNewMonster(character);
+                }
+            } else {
+                newMonster = UltraHardBot.monsterFactory.createNewMonster(character);
             }
             return newMonster;
         }

@@ -37,7 +37,7 @@ public class Wizard implements Character, Equipment, UsingItems {
     private int agility = 10;
     private int intelligence = 25;
     private int power = 13;
-    private double experience;
+    private long experience;
     private int level = 1;
     private int baseDamage = getIntelligence()*getMultiplierIntelligence();
     private int hitPoint = getPower()*getMultiplierPower();
@@ -94,7 +94,7 @@ public class Wizard implements Character, Equipment, UsingItems {
     }
 
     private boolean setExperience(double experience) {
-        if ((this.experience += experience) < Integer.MAX_VALUE){
+        if ((this.experience += experience) < Long.MAX_VALUE){
             this.experience += experience;
             changeLevel();
             return false;
