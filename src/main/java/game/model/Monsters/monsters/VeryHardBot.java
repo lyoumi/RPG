@@ -45,7 +45,7 @@ public class VeryHardBot implements Monster {
         this.character = character;
         if (character instanceof Berserk) level = character.getLevel() + 4;
         else level = character.getLevel() + 1;
-        experience = character.getLevel()*700;
+        experience = character.getLevel()*1500;
         hitPoint = (level)*400;
         damage = (level)*100;
         setEquipmentOfDemon(character);

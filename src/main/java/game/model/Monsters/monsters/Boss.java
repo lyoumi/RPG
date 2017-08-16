@@ -32,7 +32,7 @@ public class Boss implements Monster {
 
     private Map<EquipmentItems, Item> equipmentOfDevil;
 
-    private final int experience = 1000;
+    private final int experience;
     private final int gold = 100000;
     private final String name;
 
@@ -43,12 +43,15 @@ public class Boss implements Monster {
         if (character.getLevel() <= 6){
             hitPoint = (level)*500;
             damage = (level)*90;
+            experience = 1000 * 1;
         } else if (character.getLevel() == 9){
             hitPoint = (level)*750;
             damage = (level)*120;
-        } else if (character.getLevel() > 9){
+            experience = 1000 * 2;
+        } else {
             hitPoint = (level)*1000;
             damage = (level)*150;
+            experience = 1000 * character.getLevel() * 3;
         }
         setEquipmentOfDevil(character);
         itemsList = SimpleMonsterEquipment.monsterEquipmentFactory.getMonsterEquipment().initializeItemList();

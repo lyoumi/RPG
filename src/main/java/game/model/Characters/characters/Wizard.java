@@ -61,6 +61,14 @@ public class Wizard implements Character, Equipment, UsingItems {
     private int additionIntelligence;
     private int additionAgility;
 
+    private int countOfBigHitPointBottle;
+    private int countOfMiddleHitPointBottle;
+    private int countOfSmallHitPointBottle;
+
+    private int countOfBigFlower;
+    private int countOfMiddleFlower;
+    private int countOfSmallFlower;
+
     private Wizard(){
         List<CharacterNames> names = Collections.unmodifiableList(Arrays.asList(CharacterNames.values()));
         this.name = names.get(random.nextInt(names.size())).toString();
@@ -198,69 +206,27 @@ public class Wizard implements Character, Equipment, UsingItems {
     }
 
     private boolean isHealingBigHitPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof BigHPBottle) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfBigHitPointBottle() > 0;
     }
 
     private boolean isHealingMiddleHitPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof MiddleHPBottle) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfMiddleHitPointBottle() > 0;
     }
 
     private boolean isHealingSmallHitPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof SmallHPBottle) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfSmallHitPointBottle() > 0;
     }
 
     private boolean isHealingBigManaPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof BigFlower) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfBigFlower() > 0;
     }
 
     private boolean isHealingMiddleManaPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof MiddleFlower) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfMiddleFlower() > 0;
     }
 
     private boolean isHealingSmallManaPointBottle(){
-        for (HealingItems item :
-                getInventory()) {
-            if (item instanceof SmallFlower) {
-                use(item);
-                return true;
-            }
-        }
-        return false;
+        return getCountOfSmallFlower() > 0;
     }
 
     private int getBaseDamage(){
@@ -286,23 +252,11 @@ public class Wizard implements Character, Equipment, UsingItems {
     }
 
     private int checkCountHealHitPoint(){
-        int count = 0;
-        ArrayList<HealingItems> healingItems = getInventory();
-        for (HealingItems item :
-                healingItems) {
-            if (item instanceof HealingHitPointItems) count++;
-        }
-        return count;
+        return getCountOfBigHitPointBottle() + getCountOfMiddleHitPointBottle() + getCountOfSmallHitPointBottle();
     }
 
     private int checkCountManaPointBottle(){
-        int count = 0;
-        ArrayList<HealingItems> healingItems = getInventory();
-        for (HealingItems item :
-                healingItems) {
-            if (item instanceof HealingManaPointItems) count++;
-        }
-        return count;
+        return getCountOfBigFlower() + getCountOfMiddleFlower() + getCountOfSmallFlower();
     }
 
     @Override
@@ -317,7 +271,8 @@ public class Wizard implements Character, Equipment, UsingItems {
 
     @Override
     public void setGold(int gold) {
-        this.gold = gold;
+        if (gold < Integer.MAX_VALUE) this.gold = gold;
+        else this.gold = Integer.MAX_VALUE;
     }
 
     @Override
@@ -394,85 +349,210 @@ public class Wizard implements Character, Equipment, UsingItems {
 
     @Override
     public int getMaxHitPoint() {
-        return getPower()*getMultiplierPower();
+        return getPower() * getMultiplierPower();
     }
 
     @Override
     public int getMaxManaPoint() {
-        return getIntelligence()*getMultiplierIntelligence();
+        return getIntelligence() * getMultiplierIntelligence();
+    }
+
+    public int getCountOfBigHitPointBottle() {
+        return countOfBigHitPointBottle;
+    }
+
+    public int getCountOfMiddleHitPointBottle() {
+        return countOfMiddleHitPointBottle;
+    }
+
+    public int getCountOfSmallHitPointBottle() {
+        return countOfSmallHitPointBottle;
+    }
+
+    public int getCountOfBigFlower() {
+        return countOfBigFlower;
+    }
+
+    public int getCountOfMiddleFlower() {
+        return countOfMiddleFlower;
+    }
+
+    public int getCountOfSmallFlower() {
+        return countOfSmallFlower;
     }
 
     @Override
-    public ArrayList<HealingItems> getInventory() {
-        return inventory;
+    public int getCountOfHealingItems() {
+        return getCountOfBigHitPointBottle() +
+                getCountOfMiddleHitPointBottle() +
+                getCountOfSmallHitPointBottle() +
+                getCountOfBigFlower() +
+                getCountOfMiddleFlower() +
+                getCountOfSmallFlower();
     }
 
     @Override
     public boolean add(HealingItems item) {
-        if (getInventory().size() < 100) {
-            if (item instanceof HealingManaPointItems){
-                if (checkCountManaPointBottle() < 50) return inventory.add(item);
-                else return false;
-            } else if (item instanceof  HealingHitPointItems){
-                if (checkCountHealHitPoint() < 50) return inventory.add(item);
-                else return false;
+        if (item instanceof HealingManaPointItems) {
+            if (checkCountManaPointBottle() < 50) {
+                if (item instanceof BigFlower) {
+                    countOfBigFlower++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                } else if (item instanceof MiddleFlower) {
+                    countOfMiddleFlower++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                } else {
+                    countOfSmallFlower++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+                return true;
             } else return false;
-        }
-        else {
-            try {
-                item.finalize();
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
-            return false;
-        }
+        } else if (item instanceof HealingHitPointItems) {
+            if (checkCountHealHitPoint() < 50) {
+                if (item instanceof BigHPBottle) {
+                    countOfBigHitPointBottle++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                } else if (item instanceof MiddleHPBottle) {
+                    countOfMiddleHitPointBottle++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                } else {
+                    countOfSmallHitPointBottle++;
+                    try {
+                        item.finalize();
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+                return true;
+            } else return false;
+        } else return false;
     }
 
     @Override
     public boolean addAll(List<HealingItems> items) {
-        return inventory.addAll(items);
+        if (Objects.equals(items, null)) return false;
+        else {
+            for (HealingItems item :
+                    items) {
+                if (item instanceof BigHPBottle) countOfBigHitPointBottle++;
+                else countOfBigFlower++;
+            }
+            return true;
+        }
     }
 
     @Override
     public void use(HealingItems item) {
-        item.use(this);
-        getInventory().remove(item);
-        try {
-            item.finalize();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        if (!Objects.equals(item, null)){
+            if (item instanceof BigFlower) {
+                item.use(this);
+                countOfBigFlower--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else if (item instanceof MiddleFlower){
+                item.use(this);
+                countOfMiddleFlower--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else if (item instanceof SmallHPBottle){
+                item.use(this);
+                countOfSmallFlower--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else if (item instanceof BigHPBottle){
+                item.use(this);
+                countOfBigHitPointBottle--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else if (item instanceof MiddleHPBottle){
+                item.use(this);
+                countOfMiddleHitPointBottle--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            } else {
+                item.use(this);
+                countOfSmallHitPointBottle--;
+                try {
+                    item.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         }
-        getInventory().trimToSize();
     }
 
     @Override
     public boolean healHitPoint() {
-        return isHealingBigHitPointBottle() || isHealingMiddleHitPointBottle() || isHealingSmallHitPointBottle();
+        if (isHealingBigHitPointBottle()){
+            use(BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else if (isHealingMiddleHitPointBottle()){
+            use(MiddleHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else if (isHealingSmallHitPointBottle()){
+            use(SmallHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+            return true;
+        } else return false;
     }
 
     @Override
     public boolean healManaPoint() {
-        return isHealingBigManaPointBottle() || isHealingMiddleManaPointBottle() || isHealingSmallManaPointBottle();
+        if (isHealingBigHitPointBottle()){
+            use(BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else if (isHealingMiddleHitPointBottle()){
+            use(MiddleFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else if (isHealingSmallHitPointBottle()){
+            use(SmallFlower.healingManaPointItemsFactory.getNewHealingManaPointItem());
+            return true;
+        } else return false;
     }
 
     @Override
     public boolean checkHitPointBottle(){
-        ArrayList<HealingItems> healingItems = getInventory();
-        for (HealingItems item :
-                healingItems) {
-            if (item instanceof HealingHitPointItems) return true;
-        }
-        return false;
+        return getCountOfSmallHitPointBottle() > 0 || getCountOfMiddleHitPointBottle() > 0 || getCountOfBigHitPointBottle() > 0;
     }
 
     @Override
     public boolean checkManaPointBottle(){
-        ArrayList<HealingItems> healingItems = getInventory();
-        for (HealingItems item :
-                healingItems) {
-            if (item instanceof HealingManaPointItems) return true;
-        }
-        return false;
+        return getCountOfSmallFlower() != 0 || getCountOfMiddleFlower() != 0 || getCountOfBigFlower() != 0;
+
     }
 
     @Override
@@ -490,6 +570,10 @@ public class Wizard implements Character, Equipment, UsingItems {
                     }
                     equipmentItems.put(weapon.EQUIPMENT_ITEMS(), weapon);
                     updateStats();
+                } else try {
+                    weapon.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
             } else {
                 equipmentItems.put(weapon.EQUIPMENT_ITEMS(), weapon);
@@ -497,8 +581,8 @@ public class Wizard implements Character, Equipment, UsingItems {
             }
         } else {
             armor = (Armor) item;
-            Armor usingArmor = (Armor)equipmentItems.get(item.EQUIPMENT_ITEMS());
             if (equipmentItems.containsKey(item.EQUIPMENT_ITEMS())){
+                Armor usingArmor = (Armor)equipmentItems.get(item.EQUIPMENT_ITEMS());
                 if (armor.getDefence() > usingArmor.getDefence()){
                     equipmentItems.remove(armor.EQUIPMENT_ITEMS());
                     try {
@@ -508,6 +592,10 @@ public class Wizard implements Character, Equipment, UsingItems {
                     }
                     equipmentItems.put(armor.EQUIPMENT_ITEMS(), armor);
                     updateStats();
+                } else try {
+                    armor.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
             } else {
                 equipmentItems.put(armor.EQUIPMENT_ITEMS(), armor);

@@ -1,9 +1,13 @@
 group 'game'
-version '2.0.18'
+version '2.0.20'
 
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
+
+tasks.withType(JavaForkOptions) {
+    jvmArgs '-Xmx2048m', '-XX:MaxPermSize=512m', '-XX:-UseGCOverheadLimit', '-XX:+CMSClassUnloadingEnabled'
+}
 
 task fatJar(type: Jar) {
     manifest {
@@ -14,6 +18,9 @@ task fatJar(type: Jar) {
     baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+    tasks.withType(JavaForkOptions) {
+        jvmArgs '-Xmx2048m', '-XX:MaxPermSize=512m', '-XX:-UseGCOverheadLimit', '-XX:+CMSClassUnloadingEnabled'
+    }
 }
 
 repositories {
@@ -22,5 +29,6 @@ repositories {
 
 dependencies {
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
+    compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
 
 }

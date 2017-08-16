@@ -42,11 +42,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.jasypt.util.text.BasicTextEncryptor;
 
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -86,6 +83,8 @@ public class PlayerController {
 
     private Character character;
     private InnerPlayerControllerClass innerPlayerControllerClass;
+
+    private String myEncryptionPassword = "7~e~~^~};&uF@8jgX2@~?_[4y4RN!,c`<y@3[.cK78}r~#B8wq7C8w/3cP)Gn+ENKf/Fd(!8fX#B3^YAJF37n!KY9/\\%A6P(`QY&YGhbEC*q=_[^p+M*Nvf<_4}n?>SU59a2#&kw~DVdfNt&#2\"'Jf;wkn$<pZ-:aA'&5A7qtkkvcyJ_G!)-~RXNuPEw$Rkr7x%pCnfgYyH}Z@t)E'(v,~VvGbya8%`Mv:@a<fT;aRZ%h~bm`A885?m'XNFY9eZ{n-D$3Nv$vsJNtThjdw)2gKYnApR>*vCPDp/&aj~$]Xdj7'}q[dx;X'tt\"=s*>+?EFg{?sHSbNG;{v8q(YQ}-Dc%g5{g3cZP/.[@s$3cu2;V8[Mu<*4pY(_3[W~@YX4rjqf,@w&BUV'u~~]^N?w~MargR-S>e]xkm!PD24_UJ;`ZT,bSD#'c5,cUT#nT:\\n7RgJpZ\"_%]nP)&7cHQ/pj6{D;j\"e9@5%n@v<d{zp,A3+nR9t^jE8H~X3GnZ7^?9:LX_]m{{~)}9@qY5HnmA@,gk}^%R[&/-Ywf+#;$;:=?xuB~EqB63:zTsrYXb6djWf?;\\}U%nQ%fue7*{#__Se3JK,t+F\\aCSc+D.^dS/h+`3t&DM^R3pfVh=rW9kkz@2V4Sg>8jbGJaS')`t%FeYAD.mE-&*!+C>u~}gQkzY^Y5Z]$geRS_FhASc.Q/cP8E6p[!<8fd6GQ;Q=YA7<N*4xX+C2jq3h4s^t%#9[2D^3{<(gx\\#'{Nf/uwV',9_xU[sg3@_Y*7tQjJr+xfpH}-gdb:9XDD@CAqk(T8.;AJ(E@rq,w5kL@`syZaA(aXWXS:!7qQcZ(`MRWBHdT;dgN_^X&}U[rW+wWd^tu+YBSWMZ_S9#Vp>@C?g`qcXU%,Hnk?^k,6F4_d<P='`9M#c=:)'$tc')#fLNX~>%,\"fPfYj,fh}_8\\z3~Gm%#r+J#Q*>(pL)gtUXj'S)$a;zgUazET[HM:%m3W:M7+B;E)A~WKNsR+yj.9bd}c.NgZ(kAd5$#?nhU\\!\"b&}W>^yy&<7L=9'*[FyNH^}8CB7GH--/e+bYv\\v\\NG$=St];@E2(a]^\\a\\:#~Vc6C&kYhWPF9B[w_;,Vj;Qd&fgX2PbWtk\\.xdf&e5p/QQ6\\y(`,HZ*9JR#mm(2RP8E=<:*j<'-r?p$Bn!sH:uH{?h?pwR[$f5-M6'PP#_9a\\G;=L=xD5>5=V!$7wq@3MSR/SL]b>;`\\!+uj#tLk=cF]H^:`m$`XF8Z!As.;YAd*TDrAjF)DGQL]z!w!8_@%b@YuHTSrU7RZ,u@z;&3z7h6qc_5>/:-VBmz^c:zeMrjbp6k9=)3wZk<6M4YV3R6\\&Rv\\?ebdyAW-y<BsmwVmPLUe,<Qd`<&RH$f,CM}H{\\UDcRJ@g>^rhAn:7J<X>:J8ba~m3>{tE}FGyB*3Zc)zW;]\"j%mXUZx<eLfG37d:'-Fp=Q&q\"t:z@![6su9aQWT&;jjV,h;X)8YTx{nk~aKcu't(C\\_.]^qS~vTjdw:$5x&}mtA/2XqBk8'WC*Ta/xQTmdAr/d2BZ~m!H@wZ*\"qp]ZEU:^@&uy?\"=4hv-!^AB5;M\\d[ye[t:)}wJBRQ*Qd{WS4ry\\)GUZR*^2Asu?hDyFJ&dDw@?\"VE9*f(R.@!D.txMJg7#hvBc<kKa4v{W33SvF\"eZxV~^xCM'mw\"KyEy[6h2R_yqr<8jw<ug``d4T!87)FN6`\"&t*7P\\=Jp!4/-rKJ5J_QqC*EJX!QM)Z>pFjhvZKGedb\\&EnZ?+X`B.H*2_jf9K3[7?&h+]%&&&?Wc(Y$)/jc6>z=Rz>G(,=J~?d\"xM:=k5=_f4)CE3uyAUv;S,)pyp;VL*2%=v\"T*n~r4b]dUYGL4.vDS:Q#hqj%=X!Qd8)m6@`Q{7NZvSqCcyw8[]dpLpemC'S8ruSZh85k+%`\"<p]zX-)8L+SLr&EK^Ausg,;sn-m5SwNE8AU*YF69JC%aka+LUGZu`J%V7AW'RPY!:U%Zsr2FH+3VND.KUy}%dAYdkVZ/UPnZ-gS6^#{+GaPYxxYk?2B)[fM.@Sv!S+X}F";
 
     public class InnerPlayerControllerClass implements Runnable {
 
@@ -226,7 +225,7 @@ public class PlayerController {
             updateChoiceBox(" break");
             battle:
             while (!Objects.equals(getChoice(), "break")) {
-                if (character.getInventory().size() < 5) {
+                if (character.getCountOfHealingItems() < 5) {
                     Platform.runLater(() -> {
                         Text walkingBeginning = new Text("   info: I need go walk.... Pls, wait some time, I will be back\n" + character.toString());
                         walkingBeginning.setFill(Color.DARKBLUE);
@@ -248,7 +247,7 @@ public class PlayerController {
                         Platform.runLater(() -> messageBox.getChildren().add(boss));
                         do {
                             updateScreen();
-                            if (character.getHitPoint() <= character.getMaxHitPoint() / 4 * 3) {
+                            if (character.getHitPoint() < character.getMaxHitPoint() / 4 * 3) {
                                 if (!autoHeal()) break;
                             }
                             updateScreen();
@@ -258,6 +257,7 @@ public class PlayerController {
                         } while (true);
                         updateScreen();
                         endEvent(character, monster, true);
+                        System.gc();
                         try {
                             monster.finalize();
                         } catch (Throwable throwable) {
@@ -478,7 +478,7 @@ public class PlayerController {
          * @return String result of walking
          */
         private String walking() {
-            while (character.getInventory().size() < ((character.getLevel() + 1) * 10)) {
+            while (character.getCountOfHealingItems() < ((character.getLevel() + 1) * 10)) {
                 character.experienceDrop(0.0000001);
                 if (random.nextInt(10000000) == 999999) {
                     HealingItems item = itemsList.get(random.nextInt(sizeOfItems));
@@ -487,7 +487,7 @@ public class PlayerController {
                         viewFoundedInfo.setFill(Color.GREEN);
                         messageBox.getChildren().add(viewFoundedInfo);
                     });
-                    character.getInventory().add(item);
+                    ((UsingItems)character).add(item);
                     updateScreen();
                 }
             }
@@ -548,12 +548,12 @@ public class PlayerController {
             Platform.runLater(() -> {
 
                 Text viewUsingItems = new Text("   info: Use your items? " +
-                        "BigHitPointBottle: " + getCountOfBigHitPointBottles() +
-                        "; MiddleHitPointBottle: " + getCountOfMiddleHitPointBottles() +
-                        "; SmallHitPointBottle: " + getCountOfSmallHitPointBottles() +
-                        ";\n        BigFlower: " + getCountOfBigFlowers() +
-                        "; MiddleFlower: " + getCountOfMiddleFlowers() +
-                        "; SmallFlower: " + getCountSmallFlowers() + "\n   info: Pls, select by index....");
+                        "BigHitPointBottle: " + character.getCountOfBigHitPointBottle() +
+                        "; MiddleHitPointBottle: " + character.getCountOfMiddleHitPointBottle() +
+                        "; SmallHitPointBottle: " + character.getCountOfSmallHitPointBottle() +
+                        ";\n        BigFlower: " + character.getCountOfBigFlower() +
+                        "; MiddleFlower: " + character.getCountOfMiddleFlower() +
+                        "; SmallFlower: " + character.getCountOfSmallFlower() + "\n   info: Pls, select by index....");
                 viewUsingItems.setFill(Color.GREEN);
                 messageBox.getChildren().add(viewUsingItems);
             });
@@ -797,110 +797,50 @@ public class PlayerController {
 
         private HealingItems getBigHitPointBottle() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof BigHPBottle) bottle = item;
+            if (character.getCountOfBigHitPointBottle() != 0){
+                bottle = BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem();
             }
             return bottle;
         }
 
         private HealingItems getMiddleHitPointBottle() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof MiddleHPBottle) bottle = item;
+            if (character.getCountOfMiddleHitPointBottle() != 0){
+                bottle = MiddleHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem();
             }
             return bottle;
         }
 
         private HealingItems getSmallHitPointBottle() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof SmallHPBottle) bottle = item;
+            if (character.getCountOfSmallHitPointBottle() != 0){
+                bottle = SmallHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem();
             }
             return bottle;
         }
 
         private HealingItems getBigFlower() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof BigFlower) bottle = item;
+            if (character.getCountOfBigFlower() != 0){
+                bottle = BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem();
             }
             return bottle;
         }
 
         private HealingItems getMiddleFlower() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof MiddleFlower) bottle = item;
+            if (character.getCountOfMiddleFlower() != 0){
+                bottle = MiddleFlower.healingManaPointItemsFactory.getNewHealingManaPointItem();
             }
             return bottle;
         }
 
         private HealingItems getSmallFlower() {
             HealingItems bottle = null;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof SmallFlower) bottle = item;
+            if (character.getCountOfSmallFlower() != 0){
+                bottle = SmallFlower.healingManaPointItemsFactory.getNewHealingManaPointItem();
             }
             return bottle;
-        }
-
-        private int getCountOfBigHitPointBottles() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof BigHPBottle) count++;
-            }
-            return count;
-        }
-
-        private int getCountOfMiddleHitPointBottles() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof MiddleHPBottle) count++;
-            }
-            return count;
-        }
-
-        private int getCountOfSmallHitPointBottles() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof SmallHPBottle) count++;
-            }
-            return count;
-        }
-
-        private int getCountOfBigFlowers() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof BigFlower) count++;
-            }
-            return count;
-        }
-
-        private int getCountOfMiddleFlowers() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof MiddleFlower) count++;
-            }
-            return count;
-        }
-
-        private int getCountSmallFlowers() {
-            int count = 0;
-            for (HealingItems item :
-                    character.getInventory()) {
-                if (item instanceof SmallFlower) count++;
-            }
-            return count;
         }
 
         private synchronized void updateScreen() {
@@ -917,18 +857,18 @@ public class PlayerController {
 
             });
 
-            if (!character.getInventory().isEmpty()) {
-                Text viewHealingBigHitPointBottles = new Text("BigHPBottles: " + getCountOfBigHitPointBottles());
+
+                Text viewHealingBigHitPointBottles = new Text("BigHPBottles: " + character.getCountOfBigHitPointBottle());
                 viewHealingBigHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingMiddleHitPointBottles = new Text("MiddleHPBottles: " + getCountOfMiddleHitPointBottles());
+                Text viewHealingMiddleHitPointBottles = new Text("MiddleHPBottles: " + character.getCountOfMiddleHitPointBottle());
                 viewHealingMiddleHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingSmallHitPointBottles = new Text("SmallHPBottles: " + getCountOfSmallHitPointBottles());
+                Text viewHealingSmallHitPointBottles = new Text("SmallHPBottles: " + character.getCountOfSmallHitPointBottle());
                 viewHealingSmallHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingBigFlowers = new Text("BigFlowers: " + getCountOfBigFlowers());
+                Text viewHealingBigFlowers = new Text("BigFlowers: " + character.getCountOfBigFlower());
                 viewHealingBigFlowers.setFill(Color.BLUE);
-                Text viewHealingMiddleFlowers = new Text("MiddleFlowers: " + getCountOfMiddleFlowers());
+                Text viewHealingMiddleFlowers = new Text("MiddleFlowers: " + character.getCountOfMiddleFlower());
                 viewHealingMiddleFlowers.setFill(Color.BLUE);
-                Text viewHealingSmallFlowers = new Text("SmallFlowers: " + getCountSmallFlowers());
+                Text viewHealingSmallFlowers = new Text("SmallFlowers: " + character.getCountOfSmallFlower());
                 viewHealingSmallFlowers.setFill(Color.BLUE);
 
                 Platform.runLater(() -> {
@@ -941,7 +881,7 @@ public class PlayerController {
                     itemBox.getChildren().add(viewHealingSmallFlowers);
                 });
 
-            }
+
 
             if (!((Equipment) character).showEquipment().isEmpty()) {
                 Platform.runLater(() -> equipmentBox.getChildren().clear());
@@ -1091,8 +1031,13 @@ public class PlayerController {
 
     private void save(String filePath){
 
+
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(myEncryptionPassword);
+
         XStream xStream = new XStream();
         String xml = xStream.toXML(character);
+        String myEncryptedText = textEncryptor.encrypt(xml);
         XMLEncoder encoder=null;
         try{
             encoder=new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)));
@@ -1100,19 +1045,24 @@ public class PlayerController {
             fileNotFound.printStackTrace();
         }
         if (encoder != null) {
-            encoder.writeObject(xml);
+            encoder.writeObject(myEncryptedText);
             encoder.close();
         }
     }
 
     private void load(String path){
         character = null;
+
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(myEncryptionPassword);
+
         XStream xStream = new XStream();
         XMLDecoder decoder=null;
         try{
             decoder=new XMLDecoder(new BufferedInputStream(new FileInputStream(path)));
             String xml = decoder.readObject().toString();
-            character = (Character) xStream.fromXML(xml);
+            String plainText = textEncryptor.decrypt(xml);
+            character = (Character) xStream.fromXML(plainText);
         }catch(FileNotFoundException fileNotFound){
             fileNotFound.printStackTrace();
         }

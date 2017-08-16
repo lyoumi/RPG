@@ -115,13 +115,27 @@ public interface Character extends Serializable{
      */
     int getMaxManaPoint();
 
-    /**
-     * Метод, возвращающий инвентарь игрока в виде {@link ArrayList}
-     *
-     * @return
-     *          list of {@link HealingItems}
-     */
-    ArrayList<HealingItems> getInventory();
+//    /**
+//     * Метод, возвращающий инвентарь игрока в виде {@link ArrayList}
+//     *
+//     * @return
+//     *          list of {@link HealingItems}
+//     */
+//    ArrayList<HealingItems> getInventory();
+
+    int getCountOfBigHitPointBottle();
+
+    int getCountOfMiddleHitPointBottle();
+
+    int getCountOfSmallHitPointBottle();
+
+    int getCountOfBigFlower();
+
+    int getCountOfMiddleFlower();
+
+    int getCountOfSmallFlower();
+
+    int getCountOfHealingItems();
 
     /**
      * Метод, вызываюшийся после убийства монстра и добавлении нового опыта.
