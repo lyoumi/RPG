@@ -18,6 +18,7 @@ import game.model.Items.items.heal.healManaPoint.items.BigFlower;
 import game.model.Items.items.heal.healManaPoint.items.MiddleFlower;
 import game.model.Items.items.heal.healManaPoint.items.SmallFlower;
 import game.model.Items.items.weapons.Weapons;
+import game.model.Quests.Quest;
 import game.model.abilities.Magic;
 import game.model.abilities.MagicClasses;
 import game.model.abilities.buffs.BuffClasses;
@@ -67,6 +68,7 @@ public class Wizard implements Character, Equipment, UsingItems {
     private int countOfBigFlower;
     private int countOfMiddleFlower;
     private int countOfSmallFlower;
+    private Quest quest;
 
     private Wizard(){
         List<CharacterNames> names = Collections.unmodifiableList(Arrays.asList(CharacterNames.values()));
@@ -255,6 +257,16 @@ public class Wizard implements Character, Equipment, UsingItems {
     @Override
     public double expToNextLevel() {
         return (expToNextLevel - getExperience());
+    }
+
+    @Override
+    public void setQuest(Quest quest) {
+        this.quest = quest;
+    }
+
+    @Override
+    public Quest getQuest() {
+        return quest;
     }
 
     @Override

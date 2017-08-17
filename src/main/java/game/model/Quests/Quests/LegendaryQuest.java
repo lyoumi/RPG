@@ -13,6 +13,7 @@ import game.model.Items.items.weapons.weapons.wizard.RelicStaff;
 import game.model.Quests.Quest;
 import game.model.Quests.QuestFactory;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +26,7 @@ public class LegendaryQuest implements Quest {
     private final int task;
 
     private Character character;
+    private Item item;
 
     private int last;
 
@@ -33,7 +35,17 @@ public class LegendaryQuest implements Quest {
         task = character.getLevel() * 1000;
         last = task;
         if (character.getLevel() < 8) experience = character.getLevel()*100;
-        else experience = character.getLevel()*10000;
+        else experience = character.getLevel()*1000000;
+
+        List<Item> rewardList = new ArrayList<>();
+
+        if (character instanceof Archer) rewardList.add(RelicBow.itemsFactory.createNewItem(character));
+        else if (character instanceof Berserk) rewardList.add(RelicBoxingGloves.itemsFactory.createNewItem(character));
+        else rewardList.add(RelicStaff.itemsFactory.createNewItem(character));
+        rewardList.add(RelicHelmet.itemsFactory.createNewItem(character));
+        rewardList.add(RelicArmor.itemsFactory.createNewItem(character));
+        rewardList.add(RelicBoots.itemsFactory.createNewItem(character));
+        item = rewardList.get(random.nextInt(rewardList.size()));
     }
 
     @Override
@@ -55,16 +67,7 @@ public class LegendaryQuest implements Quest {
 
     @Override
     public Item getItemReward() {
-        List<Item> rewardList = new ArrayList<>();
-
-        if (character instanceof Archer) rewardList.add(RelicBow.itemsFactory.createNewItem(character));
-        else if (character instanceof Berserk) rewardList.add(RelicBoxingGloves.itemsFactory.createNewItem(character));
-        else rewardList.add(RelicStaff.itemsFactory.createNewItem(character));
-        rewardList.add(RelicHelmet.itemsFactory.createNewItem(character));
-        rewardList.add(RelicArmor.itemsFactory.createNewItem(character));
-        rewardList.add(RelicBoots.itemsFactory.createNewItem(character));
-
-        return rewardList.get(random.nextInt(rewardList.size()));
+        return item;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LegendaryQuest implements Quest {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": kill " + getTask() + " enemy; reward: " + getReward() + " exp";
+        return this.getClass().getSimpleName() + ": kill " + getTask() + " enemy; reward: " + getReward() + " exp; Item: " + item;
     }
 
     public static QuestFactory questFactory = LegendaryQuest::new;

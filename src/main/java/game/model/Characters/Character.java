@@ -1,6 +1,7 @@
 package game.model.Characters;
 
 import game.model.Items.items.HealingItems;
+import game.model.Quests.Quest;
 import game.model.abilities.Magic;
 
 import java.io.Serializable;
@@ -204,4 +205,8 @@ public interface Character extends Serializable{
     boolean checkManaPointBottle();
 
     double expToNextLevel();
+
+    void setQuest(Quest quest);
+
+    Quest getQuest();
 }

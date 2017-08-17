@@ -21,6 +21,7 @@ import game.model.Monsters.Monster;
 import game.model.Monsters.equipment.equipment.SimpleMonsterEquipment;
 import game.model.Monsters.monsters.*;
 import game.model.Quests.Quest;
+import game.model.Quests.Quests.LegendaryQuest;
 import game.model.abilities.Magic;
 import game.model.abilities.MagicClasses;
 import game.model.abilities.instants.instants.healing.SmallHealing;
@@ -85,6 +86,8 @@ public class PlayerController {
     public ScrollPane messageBoxScrollPane;
 
     private Character character;
+    private Quest quest;
+    private int task;
     private InnerPlayerControllerClass innerPlayerControllerClass;
 
     private String myEncryptionPassword = "7~e~~^~};&uF@8jgX2@~?_[4y4RN!,c`<y@3[.cK78}r~#B8wq7C8w/3cP)Gn+ENKf/Fd(!8fX#B3^YAJF37n!KY9/\\%A6P(`QY&YGhbEC*q=_[^p+M*Nvf<_4}n?>SU59a2#&kw~DVdfNt&#2\"'Jf;wkn$<pZ-:aA'&5A7qtkkvcyJ_G!)-~RXNuPEw$Rkr7x%pCnfgYyH}Z@t)E'(v,~VvGbya8%`Mv:@a<fT;aRZ%h~bm`A885?m'XNFY9eZ{n-D$3Nv$vsJNtThjdw)2gKYnApR>*vCPDp/&aj~$]Xdj7'}q[dx;X'tt\"=s*>+?EFg{?sHSbNG;{v8q(YQ}-Dc%g5{g3cZP/.[@s$3cu2;V8[Mu<*4pY(_3[W~@YX4rjqf,@w&BUV'u~~]^N?w~MargR-S>e]xkm!PD24_UJ;`ZT,bSD#'c5,cUT#nT:\\n7RgJpZ\"_%]nP)&7cHQ/pj6{D;j\"e9@5%n@v<d{zp,A3+nR9t^jE8H~X3GnZ7^?9:LX_]m{{~)}9@qY5HnmA@,gk}^%R[&/-Ywf+#;$;:=?xuB~EqB63:zTsrYXb6djWf?;\\}U%nQ%fue7*{#__Se3JK,t+F\\aCSc+D.^dS/h+`3t&DM^R3pfVh=rW9kkz@2V4Sg>8jbGJaS')`t%FeYAD.mE-&*!+C>u~}gQkzY^Y5Z]$geRS_FhASc.Q/cP8E6p[!<8fd6GQ;Q=YA7<N*4xX+C2jq3h4s^t%#9[2D^3{<(gx\\#'{Nf/uwV',9_xU[sg3@_Y*7tQjJr+xfpH}-gdb:9XDD@CAqk(T8.;AJ(E@rq,w5kL@`syZaA(aXWXS:!7qQcZ(`MRWBHdT;dgN_^X&}U[rW+wWd^tu+YBSWMZ_S9#Vp>@C?g`qcXU%,Hnk?^k,6F4_d<P='`9M#c=:)'$tc')#fLNX~>%,\"fPfYj,fh}_8\\z3~Gm%#r+J#Q*>(pL)gtUXj'S)$a;zgUazET[HM:%m3W:M7+B;E)A~WKNsR+yj.9bd}c.NgZ(kAd5$#?nhU\\!\"b&}W>^yy&<7L=9'*[FyNH^}8CB7GH--/e+bYv\\v\\NG$=St];@E2(a]^\\a\\:#~Vc6C&kYhWPF9B[w_;,Vj;Qd&fgX2PbWtk\\.xdf&e5p/QQ6\\y(`,HZ*9JR#mm(2RP8E=<:*j<'-r?p$Bn!sH:uH{?h?pwR[$f5-M6'PP#_9a\\G;=L=xD5>5=V!$7wq@3MSR/SL]b>;`\\!+uj#tLk=cF]H^:`m$`XF8Z!As.;YAd*TDrAjF)DGQL]z!w!8_@%b@YuHTSrU7RZ,u@z;&3z7h6qc_5>/:-VBmz^c:zeMrjbp6k9=)3wZk<6M4YV3R6\\&Rv\\?ebdyAW-y<BsmwVmPLUe,<Qd`<&RH$f,CM}H{\\UDcRJ@g>^rhAn:7J<X>:J8ba~m3>{tE}FGyB*3Zc)zW;]\"j%mXUZx<eLfG37d:'-Fp=Q&q\"t:z@![6su9aQWT&;jjV,h;X)8YTx{nk~aKcu't(C\\_.]^qS~vTjdw:$5x&}mtA/2XqBk8'WC*Ta/xQTmdAr/d2BZ~m!H@wZ*\"qp]ZEU:^@&uy?\"=4hv-!^AB5;M\\d[ye[t:)}wJBRQ*Qd{WS4ry\\)GUZR*^2Asu?hDyFJ&dDw@?\"VE9*f(R.@!D.txMJg7#hvBc<kKa4v{W33SvF\"eZxV~^xCM'mw\"KyEy[6h2R_yqr<8jw<ug``d4T!87)FN6`\"&t*7P\\=Jp!4/-rKJ5J_QqC*EJX!QM)Z>pFjhvZKGedb\\&EnZ?+X`B.H*2_jf9K3[7?&h+]%&&&?Wc(Y$)/jc6>z=Rz>G(,=J~?d\"xM:=k5=_f4)CE3uyAUv;S,)pyp;VL*2%=v\"T*n~r4b]dUYGL4.vDS:Q#hqj%=X!Qd8)m6@`Q{7NZvSqCcyw8[]dpLpemC'S8ruSZh85k+%`\"<p]zX-)8L+SLr&EK^Ausg,;sn-m5SwNE8AU*YF69JC%aka+LUGZu`J%V7AW'RPY!:U%Zsr2FH+3VND.KUy}%dAYdkVZ/UPnZ-gS6^#{+GaPYxxYk?2B)[fM.@Sv!S+X}F";
@@ -94,8 +97,8 @@ public class PlayerController {
         private final Random random = new Random();
         private final List<HealingItems> itemsList = SimpleMonsterEquipment.monsterEquipmentFactory.getMonsterEquipment().initializeItemList();
         private final int sizeOfItems = itemsList.size();
-        private Quest quest;
-        private int task;
+
+
 
         @Override
         public void run() {
@@ -302,8 +305,8 @@ public class PlayerController {
             Trader trader = SimpleTrader.tradersFactory.getTrader(character);
             market:
             while (true) {
-                updateChoiceBox(" equipment", " items", " quest", " exit");
-                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList or quest: enter equipment, item, quest or exit for exit from market....");
+                updateChoiceBox(" equipment", " items", " quests", " exit");
+                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList or quests: enter equipment, item, quest or exit for exit from market....");
                 viewWelcomeSpeech.setFill(Color.BLUEVIOLET);
                 Platform.runLater(() -> messageBox.getChildren().add(viewWelcomeSpeech));
                 try {
@@ -451,10 +454,10 @@ public class PlayerController {
                         }
                         break;
                     }
-                    case "quest": {
-                        ExtendedText quest = new ExtendedText("   info: " + trader.getQuest(1) + "\n   info: " + trader.getQuest(2));
+                    case "quests": {
+                        ExtendedText quest = new ExtendedText("   info: " + trader.getQuest(1) + "\n   info: " + trader.getQuest(2) + "\n   info: 0 for exit");
                         quest.setFill(Color.BLUEVIOLET);
-                        updateChoiceBox(" 1", " 2");
+                        updateChoiceBox(" 1", " 2", " 0");
                         Platform.runLater(() -> messageBox.getChildren().add(quest));
                         try {
                             quest.finalize();
@@ -469,8 +472,21 @@ public class PlayerController {
                             String choice = getChoice();
                             if (isDigit(choice)){
                                 int choiceQuest = Integer.valueOf(getChoice());
-                                if ((choiceQuest==1)||(choiceQuest==2)) acceptQuest(trader.getQuest(choiceQuest));
-                                break questTalking;
+                                if ((choiceQuest==1)||(choiceQuest==2)) {
+                                    acceptQuest(trader.getQuest(choiceQuest));
+                                    break questTalking;
+                                }
+                                else if (choiceQuest==0) break questTalking;
+                                else {
+                                    ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
+                                    notCorrectChoice.setFill(Color.RED);
+                                    Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                                    try {
+                                        notCorrectChoice.finalize();
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
+                                }
                             } else {
                                 ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
                                 notCorrectChoice.setFill(Color.RED);
@@ -499,21 +515,21 @@ public class PlayerController {
             }
         }
 
-        private void acceptQuest(Quest quest){
-            this.quest = quest;
-            this.task = quest.getTask();
-        }
+
 
         private void setProgress(){
             task = quest.getLast();
             if (!(task > 0)) {
                 character.experienceDrop(quest.getReward());
+                if (quest instanceof LegendaryQuest)
+                    ((Equipment)character).equip(quest.getItemReward());
                 try {
                     quest.finalize();
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
                 quest = null;
+                character.setQuest(quest);
             }
         }
 
@@ -1152,6 +1168,12 @@ public class PlayerController {
         return choice;
     }
 
+    private void acceptQuest(Quest quest){
+        this.quest = quest;
+        this.task = quest.getTask();
+        character.setQuest(quest);
+    }
+
     public void listening() {
         String message = inputMessageArea.getText();
         Platform.runLater(() -> inputMessageArea.clear());
@@ -1247,6 +1269,8 @@ public class PlayerController {
         }catch(FileNotFoundException fileNotFound){
             fileNotFound.printStackTrace();
         }
+        if (!Objects.equals(character.getQuest(), null))
+            acceptQuest(character.getQuest());
         decoder.close();
     }
 
