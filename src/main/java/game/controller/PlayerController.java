@@ -20,6 +20,7 @@ import game.model.Items.items.heal.healManaPoint.items.SmallFlower;
 import game.model.Monsters.Monster;
 import game.model.Monsters.equipment.equipment.SimpleMonsterEquipment;
 import game.model.Monsters.monsters.*;
+import game.model.Quests.Quest;
 import game.model.abilities.Magic;
 import game.model.abilities.MagicClasses;
 import game.model.abilities.instants.instants.healing.SmallHealing;
@@ -74,6 +75,7 @@ public class PlayerController {
     public Text viewHitPoint;
     public Text viewManaPoint;
     public Text viewGold;
+    public Text viewQuest;
     public TextArea inputMessageArea;
     public Button buttonSendMessage;
     public VBox messageBox;
@@ -92,6 +94,8 @@ public class PlayerController {
         private final Random random = new Random();
         private final List<HealingItems> itemsList = SimpleMonsterEquipment.monsterEquipmentFactory.getMonsterEquipment().initializeItemList();
         private final int sizeOfItems = itemsList.size();
+        private Quest quest;
+        private int task;
 
         @Override
         public void run() {
@@ -138,10 +142,10 @@ public class PlayerController {
          * @return boolean result
          */
         private boolean nextChoice() {
-            Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new items, " +
-                    "\n   auto-battle for check your fortune, market for go to shop, \n   stop for break adventures or continue....\n");
             choice:
             while (true) {
+                Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new items, " +
+                        "\n   auto-battle for check your fortune, market for go to shop, \n   stop for break adventures or continue....\n");
                 updateChoiceBox(" use item", " walking", " auto-battle", " market", " stop", " continue");
                 Platform.runLater(() -> messageBox.getChildren().add(choice));
                 while (!canTakeMessage) {
@@ -298,7 +302,7 @@ public class PlayerController {
             Trader trader = SimpleTrader.tradersFactory.getTrader(character);
             market:
             while (true) {
-                updateChoiceBox(" equipment", " items", " exit");
+                updateChoiceBox(" equipment", " items", " quest", " exit");
                 ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList: enter equipment, items or exit for exit from market....");
                 viewWelcomeSpeech.setFill(Color.BLUEVIOLET);
                 Platform.runLater(() -> messageBox.getChildren().add(viewWelcomeSpeech));
@@ -447,6 +451,41 @@ public class PlayerController {
                         }
                         break;
                     }
+                    case "quest": {
+                        ExtendedText quest = new ExtendedText("   info:" + trader.getQuest() + "\n   info: Accept? Y/N");
+                        quest.setFill(Color.BLUEVIOLET);
+                        Platform.runLater(() -> messageBox.getChildren().add(quest));
+                        try {
+                            quest.finalize();
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        questTalking:
+                        while (true) {
+                            while (!canTakeMessage) {
+                                System.out.print("");
+                            }
+                            String choice = getChoice();
+                            switch (choice){
+                                case "Y": {
+                                    acceptQuest(trader.getQuest());
+                                    break questTalking;
+                                }
+                                case "N": break questTalking;
+                                default: {
+                                    ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
+                                    notCorrectChoice.setFill(Color.RED);
+                                    Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                                    try {
+                                        notCorrectChoice.finalize();
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
                     case "exit":
                         break market;
                     default:
@@ -459,6 +498,24 @@ public class PlayerController {
                             throwable.printStackTrace();
                         }
                 }
+            }
+        }
+
+        private void acceptQuest(Quest quest){
+            this.quest = quest;
+            this.task = 0;
+        }
+
+        private void setProgress(){
+            if (task < quest.getTask()) task++;
+            else {
+                character.experienceDrop(quest.getReward());
+                try {
+                    quest.finalize();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                quest = null;
             }
         }
 
@@ -562,8 +619,8 @@ public class PlayerController {
          */
         private String walking() {
             while (character.getCountOfHealingItems() < ((character.getLevel() + 1) * 10)) {
-                character.experienceDrop(0.0000001);
                 if (random.nextInt(10000000) == 999999) {
+                    character.experienceDrop(1);
                     HealingItems item = itemsList.get(random.nextInt(sizeOfItems));
                     ExtendedText viewFoundedInfo = new ExtendedText("   info: I found " + item);
                     viewFoundedInfo.setFill(Color.GREEN);
@@ -745,6 +802,10 @@ public class PlayerController {
          * @return boolean result
          */
         private boolean drop(Character character, Monster monster, boolean autoDrop) {
+
+            if (!Objects.equals(quest, null)){
+                setProgress();
+            }
 
             if (autoDrop) {
                 if (character.experienceDrop(monster.getExperience())) exit();
@@ -966,43 +1027,50 @@ public class PlayerController {
                 viewManaPoint.setText("MP: " + character.getManaPoint());
                 viewAttack.setText("ATK: " + character.getDamage());
                 viewGold.setText("GOLD: " + character.getGold());
-
+                if (!Objects.equals(quest, null)) Platform.runLater(() -> viewQuest.setText("QUEST: kill " + (quest.getTask()-task) + " enemy"));
             });
 
 
-                Text viewHealingBigHitPointBottles = new Text("BigHPBottles: " + character.getCountOfBigHitPointBottle());
-                viewHealingBigHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingMiddleHitPointBottles = new Text("MiddleHPBottles: " + character.getCountOfMiddleHitPointBottle());
-                viewHealingMiddleHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingSmallHitPointBottles = new Text("SmallHPBottles: " + character.getCountOfSmallHitPointBottle());
-                viewHealingSmallHitPointBottles.setFill(Color.INDIGO);
-                Text viewHealingBigFlowers = new Text("BigFlowers: " + character.getCountOfBigFlower());
-                viewHealingBigFlowers.setFill(Color.BLUE);
-                Text viewHealingMiddleFlowers = new Text("MiddleFlowers: " + character.getCountOfMiddleFlower());
-                viewHealingMiddleFlowers.setFill(Color.BLUE);
-                Text viewHealingSmallFlowers = new Text("SmallFlowers: " + character.getCountOfSmallFlower());
-                viewHealingSmallFlowers.setFill(Color.BLUE);
+            ExtendedText viewHealingBigHitPointBottles = new ExtendedText("BigHPBottles: " + character.getCountOfBigHitPointBottle());
+            viewHealingBigHitPointBottles.setFill(Color.INDIGO);
+            ExtendedText viewHealingMiddleHitPointBottles = new ExtendedText("MiddleHPBottles: " + character.getCountOfMiddleHitPointBottle());
+            viewHealingMiddleHitPointBottles.setFill(Color.INDIGO);
+            ExtendedText viewHealingSmallHitPointBottles = new ExtendedText("SmallHPBottles: " + character.getCountOfSmallHitPointBottle());
+            viewHealingSmallHitPointBottles.setFill(Color.INDIGO);
+            ExtendedText viewHealingBigFlowers = new ExtendedText("BigFlowers: " + character.getCountOfBigFlower());
+            viewHealingBigFlowers.setFill(Color.BLUE);
+            ExtendedText viewHealingMiddleFlowers = new ExtendedText("MiddleFlowers: " + character.getCountOfMiddleFlower());
+            viewHealingMiddleFlowers.setFill(Color.BLUE);
+            ExtendedText viewHealingSmallFlowers = new ExtendedText("SmallFlowers: " + character.getCountOfSmallFlower());
+            viewHealingSmallFlowers.setFill(Color.BLUE);
 
-                Platform.runLater(() -> {
-                    itemBox.getChildren().clear();
-                    itemBox.getChildren().add(viewHealingBigHitPointBottles);
-                    itemBox.getChildren().add(viewHealingMiddleHitPointBottles);
-                    itemBox.getChildren().add(viewHealingSmallHitPointBottles);
-                    itemBox.getChildren().add(viewHealingBigFlowers);
-                    itemBox.getChildren().add(viewHealingMiddleFlowers);
-                    itemBox.getChildren().add(viewHealingSmallFlowers);
-                });
+            Platform.runLater(() -> {
+                itemBox.getChildren().clear();
+                itemBox.getChildren().add(viewHealingBigHitPointBottles);
+                itemBox.getChildren().add(viewHealingMiddleHitPointBottles);
+                itemBox.getChildren().add(viewHealingSmallHitPointBottles);
+                itemBox.getChildren().add(viewHealingBigFlowers);
+                itemBox.getChildren().add(viewHealingMiddleFlowers);
+                itemBox.getChildren().add(viewHealingSmallFlowers);
+            });
 
-
+            try {
+                viewHealingBigHitPointBottles.finalize();
+                viewHealingBigFlowers.finalize();
+                viewHealingMiddleHitPointBottles.finalize();
+                viewHealingMiddleFlowers.finalize();
+                viewHealingSmallHitPointBottles.finalize();
+                viewHealingSmallFlowers.finalize();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
 
             if (!((Equipment) character).showEquipment().isEmpty()) {
                 Platform.runLater(() -> equipmentBox.getChildren().clear());
                 for (Map.Entry<EquipmentItems, Item> entry :
                         ((Equipment) character).showEquipment().entrySet()) {
                     Text equipment = new Text(entry.getKey() + ": " + entry.getValue());
-                    Platform.runLater(() -> {
-                        equipmentBox.getChildren().add(equipment);
-                    });
+                    Platform.runLater(() -> equipmentBox.getChildren().add(equipment));
 
                 }
             }

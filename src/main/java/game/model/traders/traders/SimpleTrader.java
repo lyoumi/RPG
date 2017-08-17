@@ -13,6 +13,8 @@ import game.model.Items.items.heal.healManaPoint.items.BigFlower;
 import game.model.Items.items.weapons.weapons.archer.LegendaryBow;
 import game.model.Items.items.weapons.weapons.berserk.LegendaryBoxingGloves;
 import game.model.Items.items.weapons.weapons.wizard.LegendaryStaff;
+import game.model.Quests.Quest;
+import game.model.Quests.Quests.TradersQuest;
 import game.model.traders.Trader;
 import game.model.traders.TradersFactory;
 import ext.RandomUniqueValue;
@@ -97,6 +99,11 @@ public class SimpleTrader implements Trader {
     @Override
     public Map<Integer, HealingItems> getPriceListHealingObjects() {
         return priceListHealingObjects;
+    }
+
+    @Override
+    public Quest getQuest() {
+        return TradersQuest.questFactory.createNewQuest(character);
     }
 
     public static TradersFactory tradersFactory = SimpleTrader::new;

@@ -68,41 +68,6 @@ public class Berserk implements Character, UsingItems, Equipment {
     private int countOfMiddleFlower;
     private int countOfSmallFlower;
 
-
-    public int getCountOfBigHitPointBottle() {
-        return countOfBigHitPointBottle;
-    }
-
-    public int getCountOfMiddleHitPointBottle() {
-        return countOfMiddleHitPointBottle;
-    }
-
-    public int getCountOfSmallHitPointBottle() {
-        return countOfSmallHitPointBottle;
-    }
-
-    public int getCountOfBigFlower() {
-        return countOfBigFlower;
-    }
-
-    public int getCountOfMiddleFlower() {
-        return countOfMiddleFlower;
-    }
-
-    public int getCountOfSmallFlower() {
-        return countOfSmallFlower;
-    }
-
-    @Override
-    public int getCountOfHealingItems() {
-        return getCountOfBigHitPointBottle() +
-                getCountOfMiddleHitPointBottle() +
-                getCountOfSmallHitPointBottle() +
-                getCountOfBigFlower() +
-                getCountOfMiddleFlower() +
-                getCountOfSmallFlower();
-    }
-
     private Berserk(){
         List<CharacterNames> names = Collections.unmodifiableList(Arrays.asList(CharacterNames.values()));
         this.name = names.get(random.nextInt(names.size())).toString();
@@ -134,10 +99,6 @@ public class Berserk implements Character, UsingItems, Equipment {
             changeLevel();
             return false;
         } else return true;
-    }
-
-    public double expToNextLevel() {
-        return (expToNextLevel - getExperience());
     }
 
     private boolean changeLevel(){
@@ -293,6 +254,51 @@ public class Berserk implements Character, UsingItems, Equipment {
 
     private int checkCountManaPointBottle(){
         return getCountOfBigFlower() + getCountOfMiddleFlower() + getCountOfSmallFlower();
+    }
+
+    @Override
+    public double expToNextLevel() {
+        return (expToNextLevel - getExperience());
+    }
+
+    @Override
+    public int getCountOfBigHitPointBottle() {
+        return countOfBigHitPointBottle;
+    }
+
+    @Override
+    public int getCountOfMiddleHitPointBottle() {
+        return countOfMiddleHitPointBottle;
+    }
+
+    @Override
+    public int getCountOfSmallHitPointBottle() {
+        return countOfSmallHitPointBottle;
+    }
+
+    @Override
+    public int getCountOfBigFlower() {
+        return countOfBigFlower;
+    }
+
+    @Override
+    public int getCountOfMiddleFlower() {
+        return countOfMiddleFlower;
+    }
+
+    @Override
+    public int getCountOfSmallFlower() {
+        return countOfSmallFlower;
+    }
+
+    @Override
+    public int getCountOfHealingItems() {
+        return getCountOfBigHitPointBottle() +
+                getCountOfMiddleHitPointBottle() +
+                getCountOfSmallHitPointBottle() +
+                getCountOfBigFlower() +
+                getCountOfMiddleFlower() +
+                getCountOfSmallFlower();
     }
 
     @Override
@@ -572,7 +578,7 @@ public class Berserk implements Character, UsingItems, Equipment {
             if (equipmentItems.containsKey(item.EQUIPMENT_ITEMS())){
                 Weapons usingWeapon = (Weapons) equipmentItems.get(EquipmentItems.HANDS);
                 if (weapon.getDamage() > usingWeapon.getDamage()){
-                    equipmentItems.remove(weapon.EQUIPMENT_ITEMS());
+                    equipmentItems.remove(usingWeapon.EQUIPMENT_ITEMS());
                     try {
                         usingWeapon.finalize();
                     } catch (Throwable throwable) {

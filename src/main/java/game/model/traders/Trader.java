@@ -2,6 +2,7 @@ package game.model.traders;
 
 import game.model.Items.items.HealingItems;
 import game.model.Items.items.Item;
+import game.model.Quests.Quest;
 
 import java.util.List;
 import java.util.Map;
@@ -48,4 +49,6 @@ public interface Trader {
      *          priceList of equipment items
      */
     Map<Integer, HealingItems> getPriceListHealingObjects();
+
+    Quest getQuest();
 }

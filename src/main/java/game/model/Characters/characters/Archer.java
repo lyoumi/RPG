@@ -101,10 +101,6 @@ public class Archer implements Character, UsingItems, Equipment{
         } else return true;
     }
 
-    public double expToNextLevel() {
-        return (expToNextLevel - getExperience());
-    }
-
     private boolean changeLevel(){
         if (expToNextLevelReady()) {
             level++;
@@ -254,6 +250,11 @@ public class Archer implements Character, UsingItems, Equipment{
 
     private int checkCountManaPointBottle(){
         return getCountOfBigFlower() + getCountOfMiddleFlower() + getCountOfSmallFlower();
+    }
+
+    @Override
+    public double expToNextLevel() {
+        return (expToNextLevel - getExperience());
     }
 
     public void setManaPoint(int mana) {

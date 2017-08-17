@@ -101,10 +101,6 @@ public class Wizard implements Character, Equipment, UsingItems {
         } else return true;
     }
 
-    public double expToNextLevel() {
-        return (expToNextLevel - getExperience());
-    }
-
     private boolean changeLevel(){
         if (expToNextLevelReady()) {
             level++;
@@ -248,17 +244,23 @@ public class Wizard implements Character, Equipment, UsingItems {
         } else return 0;
     }
 
-    public void setManaPoint(int mana) {
-        if (mana > getMaxManaPoint()) this.mana = getMaxManaPoint();
-        else this.mana = mana;
-    }
-
     private int checkCountHealHitPoint(){
         return getCountOfBigHitPointBottle() + getCountOfMiddleHitPointBottle() + getCountOfSmallHitPointBottle();
     }
 
     private int checkCountManaPointBottle(){
         return getCountOfBigFlower() + getCountOfMiddleFlower() + getCountOfSmallFlower();
+    }
+
+    @Override
+    public double expToNextLevel() {
+        return (expToNextLevel - getExperience());
+    }
+
+    @Override
+    public void setManaPoint(int mana) {
+        if (mana > getMaxManaPoint()) this.mana = getMaxManaPoint();
+        else this.mana = mana;
     }
 
     @Override
