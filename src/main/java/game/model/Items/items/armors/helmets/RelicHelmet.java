@@ -7,9 +7,7 @@ import game.model.Items.items.armors.Armor;
 import game.model.abilities.Magic;
 import game.model.abilities.buffs.buffs.ArmorBuff;
 
-import java.util.Random;
-
-public class LegendaryHelmet implements Armor {
+public class RelicHelmet implements Armor {
 
     private int defence;
     private int itemLevel;
@@ -18,9 +16,9 @@ public class LegendaryHelmet implements Armor {
     private final int price;
 
 
-    private LegendaryHelmet(Character character){
+    private RelicHelmet(Character character){
         this.character = character;
-        this.itemLevel = character.getLevel() + 5;
+        this.itemLevel = character.getLevel() + 20;
         this.price = 10000*getItemLevel();
         this.defence = getItemLevel() * 10 + 5;
         this.magic = ArmorBuff.magicFactory.getMagicFactory(getItemLevel());
@@ -57,7 +55,7 @@ public class LegendaryHelmet implements Armor {
     }
 
     public String toString(){
-        return LegendaryHelmet.class.getSimpleName() + ": DEF +" + getDefence();
+        return this.getClass().getSimpleName() + ": DEF +" + getDefence();
     }
 
     @Override
@@ -65,5 +63,5 @@ public class LegendaryHelmet implements Armor {
         super.finalize();
     }
 
-    public static ItemsFactory itemsFactory = LegendaryHelmet::new;
+    public static ItemsFactory itemsFactory = RelicHelmet::new;
 }

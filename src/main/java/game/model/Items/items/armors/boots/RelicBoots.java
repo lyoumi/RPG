@@ -1,4 +1,4 @@
-package game.model.Items.items.armors.helmets;
+package game.model.Items.items.armors.boots;
 
 import game.model.Characters.Character;
 import game.model.Items.EquipmentItems;
@@ -7,20 +7,16 @@ import game.model.Items.items.armors.Armor;
 import game.model.abilities.Magic;
 import game.model.abilities.buffs.buffs.ArmorBuff;
 
-import java.util.Random;
-
-public class LegendaryHelmet implements Armor {
-
+public class RelicBoots implements Armor {
     private int defence;
     private int itemLevel;
-    private Character character;
     private Magic magic;
+    private Character character;
     private final int price;
 
-
-    private LegendaryHelmet(Character character){
+    private RelicBoots(Character character){
         this.character = character;
-        this.itemLevel = character.getLevel() + 5;
+        this.itemLevel = character.getLevel() + 20;
         this.price = 10000*getItemLevel();
         this.defence = getItemLevel() * 10 + 5;
         this.magic = ArmorBuff.magicFactory.getMagicFactory(getItemLevel());
@@ -28,7 +24,7 @@ public class LegendaryHelmet implements Armor {
 
     @Override
     public EquipmentItems EQUIPMENT_ITEMS() {
-        return EquipmentItems.HEAD;
+        return EquipmentItems.LEGS;
     }
 
     @Override
@@ -43,7 +39,7 @@ public class LegendaryHelmet implements Armor {
 
     @Override
     public String getName() {
-        return IronHelmet.class.getSimpleName();
+        return IronBoots.class.getSimpleName();
     }
 
     @Override
@@ -56,8 +52,9 @@ public class LegendaryHelmet implements Armor {
         return price;
     }
 
+    @Override
     public String toString(){
-        return LegendaryHelmet.class.getSimpleName() + ": DEF +" + getDefence();
+        return this.getClass().getSimpleName() + ": DEF +" + getDefence();
     }
 
     @Override
@@ -65,5 +62,5 @@ public class LegendaryHelmet implements Armor {
         super.finalize();
     }
 
-    public static ItemsFactory itemsFactory = LegendaryHelmet::new;
+    public static ItemsFactory itemsFactory = RelicBoots::new;
 }

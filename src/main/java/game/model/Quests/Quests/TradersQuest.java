@@ -1,6 +1,7 @@
 package game.model.Quests.Quests;
 
 import game.model.Characters.Character;
+import game.model.Items.items.Item;
 import game.model.Quests.Quest;
 import game.model.Quests.QuestFactory;
 
@@ -9,11 +10,13 @@ public class TradersQuest implements Quest {
     private final int experience;
     private final int task;
 
-    private boolean status;
+    private int last;
 
     private TradersQuest(Character character){
         task = character.getLevel() * 10;
-        experience = character.getLevel()*100;
+        last = task;
+        if (character.getLevel() < 8) experience = character.getLevel()*100;
+        else experience = character.getLevel()*10000;
     }
 
     @Override
@@ -27,13 +30,25 @@ public class TradersQuest implements Quest {
     }
 
     @Override
+    public int getLast() {
+        last--;
+        System.out.println(last);
+        return last;
+    }
+
+    @Override
+    public Item getItemReward() {
+        return null;
+    }
+
+    @Override
     public void finalize() throws Throwable {
         super.finalize();
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": kill " + getTask() + " enemy; reward: " + getReward();
+        return this.getClass().getSimpleName() + ": kill " + getTask() + " enemy; reward: " + getReward() + " exp";
     }
 
     public static QuestFactory questFactory = TradersQuest::new;

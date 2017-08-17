@@ -50,5 +50,6 @@ public interface Trader {
      */
     Map<Integer, HealingItems> getPriceListHealingObjects();
 
-    Quest getQuest();
+    Quest getQuest(int index);
+
 }

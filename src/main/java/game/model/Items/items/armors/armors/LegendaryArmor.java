@@ -11,7 +11,6 @@ import java.util.Random;
 
 public class LegendaryArmor implements Armor {
 
-
     private int defence;
     private int itemLevel;
     private Character character;

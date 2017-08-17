@@ -1,4 +1,4 @@
-package game.model.Items.items.armors.helmets;
+package game.model.Items.items.armors.armors;
 
 import game.model.Characters.Character;
 import game.model.Items.EquipmentItems;
@@ -7,9 +7,7 @@ import game.model.Items.items.armors.Armor;
 import game.model.abilities.Magic;
 import game.model.abilities.buffs.buffs.ArmorBuff;
 
-import java.util.Random;
-
-public class LegendaryHelmet implements Armor {
+public class RelicArmor implements Armor {
 
     private int defence;
     private int itemLevel;
@@ -17,18 +15,17 @@ public class LegendaryHelmet implements Armor {
     private Magic magic;
     private final int price;
 
-
-    private LegendaryHelmet(Character character){
+    private RelicArmor(Character character){
         this.character = character;
-        this.itemLevel = character.getLevel() + 5;
-        this.price = 10000*getItemLevel();
-        this.defence = getItemLevel() * 10 + 5;
+        this.itemLevel = character.getLevel() + 20;
+        this.price = getItemLevel()*10000;
+        this.defence = this.getItemLevel() * 10 + 5;
         this.magic = ArmorBuff.magicFactory.getMagicFactory(getItemLevel());
     }
 
     @Override
     public EquipmentItems EQUIPMENT_ITEMS() {
-        return EquipmentItems.HEAD;
+        return EquipmentItems.ARMOR;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class LegendaryHelmet implements Armor {
 
     @Override
     public String getName() {
-        return IronHelmet.class.getSimpleName();
+        return IronChest.class.getSimpleName();
     }
 
     @Override
@@ -57,7 +54,7 @@ public class LegendaryHelmet implements Armor {
     }
 
     public String toString(){
-        return LegendaryHelmet.class.getSimpleName() + ": DEF +" + getDefence();
+        return this.getClass().getSimpleName() + ": DEF +" + getDefence();
     }
 
     @Override
@@ -65,5 +62,5 @@ public class LegendaryHelmet implements Armor {
         super.finalize();
     }
 
-    public static ItemsFactory itemsFactory = LegendaryHelmet::new;
+    public static ItemsFactory itemsFactory = RelicArmor::new;
 }

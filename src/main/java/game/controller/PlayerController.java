@@ -145,8 +145,8 @@ public class PlayerController {
             choice:
             while (true) {
                 Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new items, " +
-                        "\n   auto-battle for check your fortune, market for go to shop, \n   stop for break adventures or continue....\n");
-                updateChoiceBox(" use item", " walking", " auto-battle", " market", " stop", " continue");
+                        "\n           auto-battle for check your fortune, tavern, \n           stop for break adventures or continue....\n");
+                updateChoiceBox(" use item", " walking", " auto-battle", " tavern", " stop", " continue");
                 Platform.runLater(() -> messageBox.getChildren().add(choice));
                 while (!canTakeMessage) {
                     System.out.print("");
@@ -166,7 +166,7 @@ public class PlayerController {
                         break;
                     case "continue":
                         break choice;
-                    case "market":
+                    case "tavern":
                         trader();
                         break;
                     case "stop":
@@ -303,7 +303,7 @@ public class PlayerController {
             market:
             while (true) {
                 updateChoiceBox(" equipment", " items", " quest", " exit");
-                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList: enter equipment, items or exit for exit from market....");
+                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList or quest: enter equipment, item, quest or exit for exit from market....");
                 viewWelcomeSpeech.setFill(Color.BLUEVIOLET);
                 Platform.runLater(() -> messageBox.getChildren().add(viewWelcomeSpeech));
                 try {
@@ -325,7 +325,7 @@ public class PlayerController {
                         Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, make your choice or enter 0 for exit....")));
                         while (true) {
                             updateChoiceBox(" id", " buy all"," 0");
-                            Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, enter id....")));
+                            Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, enter id or buy all....")));
                             while (!canTakeMessage) {
                                 System.out.print("");
                             }
@@ -452,8 +452,9 @@ public class PlayerController {
                         break;
                     }
                     case "quest": {
-                        ExtendedText quest = new ExtendedText("   info:" + trader.getQuest() + "\n   info: Accept? Y/N");
+                        ExtendedText quest = new ExtendedText("   info: " + trader.getQuest(1) + "\n   info: " + trader.getQuest(2));
                         quest.setFill(Color.BLUEVIOLET);
+                        updateChoiceBox(" 1", " 2");
                         Platform.runLater(() -> messageBox.getChildren().add(quest));
                         try {
                             quest.finalize();
@@ -466,21 +467,18 @@ public class PlayerController {
                                 System.out.print("");
                             }
                             String choice = getChoice();
-                            switch (choice){
-                                case "Y": {
-                                    acceptQuest(trader.getQuest());
-                                    break questTalking;
-                                }
-                                case "N": break questTalking;
-                                default: {
-                                    ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
-                                    notCorrectChoice.setFill(Color.RED);
-                                    Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
-                                    try {
-                                        notCorrectChoice.finalize();
-                                    } catch (Throwable throwable) {
-                                        throwable.printStackTrace();
-                                    }
+                            if (isDigit(choice)){
+                                int choiceQuest = Integer.valueOf(getChoice());
+                                if ((choiceQuest==1)||(choiceQuest==2)) acceptQuest(trader.getQuest(choiceQuest));
+                                break questTalking;
+                            } else {
+                                ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
+                                notCorrectChoice.setFill(Color.RED);
+                                Platform.runLater(() -> messageBox.getChildren().add(notCorrectChoice));
+                                try {
+                                    notCorrectChoice.finalize();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
                                 }
                             }
                         }
@@ -503,12 +501,12 @@ public class PlayerController {
 
         private void acceptQuest(Quest quest){
             this.quest = quest;
-            this.task = 0;
+            this.task = quest.getTask();
         }
 
         private void setProgress(){
-            if (task < quest.getTask()) task++;
-            else {
+            task = quest.getLast();
+            if (!(task > 0)) {
                 character.experienceDrop(quest.getReward());
                 try {
                     quest.finalize();
@@ -1018,19 +1016,6 @@ public class PlayerController {
 
         private synchronized void updateScreen() {
 
-            Platform.runLater(() -> {
-                viewName.setText("NAME: " + character.getName());
-                viewClass.setText("CLASS: " + character.getClass().getSimpleName());
-                viewLevel.setText("LVL: " + character.getLevel());
-                viewExp.setText("Experience to next level:\n" + String.valueOf((int) character.expToNextLevel()));
-                viewHitPoint.setText("HP: " + character.getHitPoint());
-                viewManaPoint.setText("MP: " + character.getManaPoint());
-                viewAttack.setText("ATK: " + character.getDamage());
-                viewGold.setText("GOLD: " + character.getGold());
-                if (!Objects.equals(quest, null)) Platform.runLater(() -> viewQuest.setText("QUEST: kill " + (quest.getTask()-task) + " enemy"));
-            });
-
-
             ExtendedText viewHealingBigHitPointBottles = new ExtendedText("BigHPBottles: " + character.getCountOfBigHitPointBottle());
             viewHealingBigHitPointBottles.setFill(Color.INDIGO);
             ExtendedText viewHealingMiddleHitPointBottles = new ExtendedText("MiddleHPBottles: " + character.getCountOfMiddleHitPointBottle());
@@ -1045,6 +1030,16 @@ public class PlayerController {
             viewHealingSmallFlowers.setFill(Color.BLUE);
 
             Platform.runLater(() -> {
+                viewName.setText("NAME: " + character.getName());
+                viewClass.setText("CLASS: " + character.getClass().getSimpleName());
+                viewLevel.setText("LVL: " + character.getLevel());
+                viewExp.setText("Experience to next level:\n" + String.valueOf((int) character.expToNextLevel()));
+                viewHitPoint.setText("HP: " + character.getHitPoint());
+                viewManaPoint.setText("MP: " + character.getManaPoint());
+                viewAttack.setText("ATK: " + character.getDamage());
+                viewGold.setText("GOLD: " + character.getGold());
+                if (!Objects.equals(quest, null)) Platform.runLater(() -> viewQuest.setText("QUEST: kill " + task + " enemy"));
+
                 itemBox.getChildren().clear();
                 itemBox.getChildren().add(viewHealingBigHitPointBottles);
                 itemBox.getChildren().add(viewHealingMiddleHitPointBottles);
@@ -1053,6 +1048,12 @@ public class PlayerController {
                 itemBox.getChildren().add(viewHealingMiddleFlowers);
                 itemBox.getChildren().add(viewHealingSmallFlowers);
             });
+
+
+
+//            Platform.runLater(() -> {
+//
+//            });
 
             try {
                 viewHealingBigHitPointBottles.finalize();
@@ -1084,7 +1085,7 @@ public class PlayerController {
                 currentChoiceBox.getChildren().clear();
                 currentChoiceBox.getChildren().add(title);
             });
-            
+
             LinkedList<Text> cases = new LinkedList<>();
             cases.add(caseFirst);
             cases.add(caseSecond);

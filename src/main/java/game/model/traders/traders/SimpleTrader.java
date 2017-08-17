@@ -14,6 +14,7 @@ import game.model.Items.items.weapons.weapons.archer.LegendaryBow;
 import game.model.Items.items.weapons.weapons.berserk.LegendaryBoxingGloves;
 import game.model.Items.items.weapons.weapons.wizard.LegendaryStaff;
 import game.model.Quests.Quest;
+import game.model.Quests.Quests.LegendaryQuest;
 import game.model.Quests.Quests.TradersQuest;
 import game.model.traders.Trader;
 import game.model.traders.TradersFactory;
@@ -102,8 +103,9 @@ public class SimpleTrader implements Trader {
     }
 
     @Override
-    public Quest getQuest() {
-        return TradersQuest.questFactory.createNewQuest(character);
+    public Quest getQuest(int index) {
+        if (index==1) return TradersQuest.questFactory.createNewQuest(character);
+        else return LegendaryQuest.questFactory.createNewQuest(character);
     }
 
     public static TradersFactory tradersFactory = SimpleTrader::new;

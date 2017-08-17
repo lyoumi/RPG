@@ -43,7 +43,7 @@ public class Boss implements Monster {
         if (character.getLevel() <= 6){
             hitPoint = (level)*500;
             damage = (level)*90;
-            experience = 1000 * 1;
+            experience = 1000;
         } else if (character.getLevel() == 9){
             hitPoint = (level)*750;
             damage = (level)*120;
