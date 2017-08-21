@@ -1,6 +1,6 @@
 package game.model.Items;
 
-import game.model.Items.items.HealingItems;
+import game.model.Items.itemsclasses.HealingItems;
 
 import java.util.List;
 

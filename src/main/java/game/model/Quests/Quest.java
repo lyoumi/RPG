@@ -1,6 +1,6 @@
 package game.model.Quests;
 
-import game.model.Items.items.Item;
+import game.model.Items.itemsclasses.Item;
 
 public interface Quest {
     

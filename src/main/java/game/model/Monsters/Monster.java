@@ -1,8 +1,8 @@
 package game.model.Monsters;
 
 import game.model.Items.EquipmentItems;
-import game.model.Items.items.HealingItems;
-import game.model.Items.items.Item;
+import game.model.Items.itemsclasses.HealingItems;
+import game.model.Items.itemsclasses.Item;
 import game.model.abilities.Magic;
 
 import java.util.LinkedList;

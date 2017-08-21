@@ -1,6 +1,6 @@
 package game.model.Monsters.equipment;
 
-import game.model.Monsters.equipment.equipment.SimpleMonsterEquipment;
+import game.model.Monsters.equipment.equipmentclasses.SimpleMonsterEquipment;
 
 public interface MonsterEquipmentFactory {
     SimpleMonsterEquipment getMonsterEquipment();

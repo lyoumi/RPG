@@ -3,31 +3,31 @@ package game.controller;
 import com.thoughtworks.xstream.XStream;
 import ext.ExtendedText;
 import game.model.Characters.Character;
-import game.model.Characters.characters.Archer;
-import game.model.Characters.characters.Berserk;
-import game.model.Characters.characters.Wizard;
+import game.model.Characters.characterclasses.Archer;
+import game.model.Characters.characterclasses.Berserk;
+import game.model.Characters.characterclasses.Wizard;
 import game.model.Items.Equipment;
 import game.model.Items.EquipmentItems;
 import game.model.Items.UsingItems;
-import game.model.Items.items.HealingItems;
-import game.model.Items.items.Item;
-import game.model.Items.items.heal.healHitPoint.items.BigHPBottle;
-import game.model.Items.items.heal.healHitPoint.items.MiddleHPBottle;
-import game.model.Items.items.heal.healHitPoint.items.SmallHPBottle;
-import game.model.Items.items.heal.healManaPoint.items.BigFlower;
-import game.model.Items.items.heal.healManaPoint.items.MiddleFlower;
-import game.model.Items.items.heal.healManaPoint.items.SmallFlower;
+import game.model.Items.itemsclasses.HealingItems;
+import game.model.Items.itemsclasses.Item;
+import game.model.Items.itemsclasses.healclasses.healHitPoint.items.BigHPBottle;
+import game.model.Items.itemsclasses.healclasses.healHitPoint.items.MiddleHPBottle;
+import game.model.Items.itemsclasses.healclasses.healHitPoint.items.SmallHPBottle;
+import game.model.Items.itemsclasses.healclasses.healManaPoint.items.BigFlower;
+import game.model.Items.itemsclasses.healclasses.healManaPoint.items.MiddleFlower;
+import game.model.Items.itemsclasses.healclasses.healManaPoint.items.SmallFlower;
 import game.model.Monsters.Monster;
-import game.model.Monsters.equipment.equipment.SimpleMonsterEquipment;
-import game.model.Monsters.monsters.*;
+import game.model.Monsters.equipment.equipmentclasses.SimpleMonsterEquipment;
+import game.model.Monsters.monstersclasses.*;
 import game.model.Quests.Quest;
-import game.model.Quests.Quests.LegendaryQuest;
+import game.model.Quests.questsclasses.LegendaryQuest;
 import game.model.abilities.Magic;
 import game.model.abilities.MagicClasses;
-import game.model.abilities.instants.instants.healing.SmallHealing;
-import game.model.abilities.magicStyle.MagicStyle;
+import game.model.abilities.instants.instantmagics.healing.SmallHealing;
+import game.model.abilities.magicStyle.Style;
 import game.model.traders.Trader;
-import game.model.traders.traders.SimpleTrader;
+import game.model.traders.tradersclasses.SimpleTrader;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -61,7 +61,6 @@ public class PlayerController {
     private String choice;
     private boolean canTakeMessage;
 
-    public Text viewAttack;
     public Text caseFirst;
     public Text caseSecond;
     public Text caseThird;
@@ -73,6 +72,7 @@ public class PlayerController {
     public Text viewClass;
     public Text viewLevel;
     public Text viewExp;
+    public Text viewAttack;
     public Text viewHitPoint;
     public Text viewManaPoint;
     public Text viewGold;
@@ -103,7 +103,7 @@ public class PlayerController {
         @Override
         public void run() {
             updateScreen();
-            beginGame();
+            nextChoice();
         }
 
         /**
@@ -113,7 +113,7 @@ public class PlayerController {
          * отправить героя добывать ресурсы и опыт, продолжить приключение или же остановить игру.
          *
          */
-        private synchronized void beginGame() {
+        private synchronized void beginManualBattle() {
 
             while (true) {
                 Monster monster = spawn(character);
@@ -147,7 +147,7 @@ public class PlayerController {
         private boolean nextChoice() {
             choice:
             while (true) {
-                Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new items, " +
+                Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new itemsclasses, " +
                         "\n           auto-battle for check your fortune, tavern, \n           stop for break adventures or continue....\n");
                 updateChoiceBox(" use item", " walking", " auto-battle", " tavern", " stop", " continue");
                 Platform.runLater(() -> messageBox.getChildren().add(choice));
@@ -305,8 +305,8 @@ public class PlayerController {
             Trader trader = SimpleTrader.tradersFactory.getTrader(character);
             market:
             while (true) {
-                updateChoiceBox(" equipment", " items", " quests", " exit");
-                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList or quests: enter equipment, item, quest or exit for exit from market....");
+                updateChoiceBox(" equipmentclasses", " itemsclasses", " quests", " exit");
+                ExtendedText viewWelcomeSpeech = new ExtendedText("\n   info: Hello my friend! Look at my priceList or quests: enter equipmentclasses, item, quest or exit for exit from market....");
                 viewWelcomeSpeech.setFill(Color.BLUEVIOLET);
                 Platform.runLater(() -> messageBox.getChildren().add(viewWelcomeSpeech));
                 try {
@@ -319,7 +319,7 @@ public class PlayerController {
                 }
                 String s = getChoice();
                 switch (s) {
-                    case "equipment": {
+                    case "equipmentclasses": {
                         for (Map.Entry<Integer, Item> entry :
                                 trader.getPriceListEquipmentObjects().entrySet()) {
                             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Price: " +
@@ -385,7 +385,7 @@ public class PlayerController {
                         }
                         break;
                     }
-                    case "items": {
+                    case "itemsclasses": {
                         for (Map.Entry<Integer, HealingItems> entry :
                                 trader.getPriceListHealingObjects().entrySet()) {
                             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Price: " +
@@ -542,7 +542,7 @@ public class PlayerController {
                 while (character.getMagicPoint() != 0) {
                     Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You have " + character.getMagicPoint())));
                     Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You can upgrade your skills " +
-                            (MagicStyle.getMagicStyle(character)) + " by index...")));
+                            (Style.getMagicStyle(character)) + " by index...")));
                     while (!canTakeMessage) {
                         System.out.print("");
                     }
@@ -550,10 +550,10 @@ public class PlayerController {
                     if (choice.equals("1") || choice.equals("2") || choice.equals("3")) {
                         Integer c = Integer.valueOf(choice);
                         c = --c;
-                        MagicStyle.getMagicStyle(character).get(c).setDamage();
+                        Style.getMagicStyle(character).get(c).setDamage();
                         character.setMagicPoint(character.getMagicPoint() - 1);
                         Integer finalC = c;
-                        Platform.runLater(() -> messageBox.getChildren().add(new Text(MagicStyle.getMagicStyle(character).get(finalC) + " was upgraded")));
+                        Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(finalC) + " was upgraded")));
                         break;
                     } else {
                         ExtendedText notCorrectChoice = new ExtendedText("   info: Pls, make the correct choice....");
@@ -576,7 +576,7 @@ public class PlayerController {
          * @param monster   Monster implementation of {@link Monster}
          */
         private void useMagic(Monster monster) {
-            ArrayList<Magic> magics = MagicStyle.getMagicStyle(character);
+            ArrayList<Magic> magics = Style.getMagicStyle(character);
             ExtendedText viewSelectMagic = new ExtendedText("   info: Select magic: " + magics);
             updateChoiceBox("1", "2", "3");
             viewSelectMagic.setFill(Color.BLUE);
@@ -722,7 +722,7 @@ public class PlayerController {
         private boolean useItem(Character character) {
             Platform.runLater(() -> {
 
-                Text viewUsingItems = new Text("   info: Use your items? " +
+                Text viewUsingItems = new Text("   info: Use your itemsclasses? " +
                         "BigHitPointBottle: " + character.getCountOfBigHitPointBottle() +
                         "; MiddleHitPointBottle: " + character.getCountOfMiddleHitPointBottle() +
                         "; SmallHitPointBottle: " + character.getCountOfSmallHitPointBottle() +
@@ -794,7 +794,7 @@ public class PlayerController {
          *
          * @param character Character implementation of {@link Character}
          * @param monster   Monster implementation of {@link Monster}
-         * @param mode      boolean mode for drop items
+         * @param mode      boolean mode for drop itemsclasses
          */
         private void endEvent(Character character, Monster monster, boolean mode) {
             if (character.getHitPoint() <= 0) {
@@ -873,7 +873,7 @@ public class PlayerController {
 
                     if (Objects.equals(equipAll, "manual"))
                         while (true) {
-                            Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, choose equipment....")));
+                            Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Pls, choose equipmentclasses....")));
                             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info:" + droppedEquipment.toString())));
                             String key;
                             List<String> list = Arrays.asList("HEAD", "HANDS", "LEGS", "ARMOR");
@@ -960,9 +960,13 @@ public class PlayerController {
                 } else {
                     newMonster = VeryHardBot.monsterFactory.createNewMonster(character);
                 }
-            } else {
-                newMonster = UltraHardBot.monsterFactory.createNewMonster(character);
-            }
+            } else if ((character.getLevel() > 15) && (character.getLevel() < 18)) {
+                if ((chance > 0) && (chance < 25)) {
+                    newMonster = BrutalHardBot.monsterFactory.createNewMonster(character);
+                } else {
+                    newMonster = UltraHardBot.monsterFactory.createNewMonster(character);
+                }
+            } else newMonster = BrutalHardBot.monsterFactory.createNewMonster(character);
             return newMonster;
         }
 
@@ -1214,8 +1218,10 @@ public class PlayerController {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml-file", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        String filePath = fileChooser.showSaveDialog(new Stage()).getAbsolutePath();
-        if (!Objects.equals(filePath, null)){
+        File file = fileChooser.showOpenDialog(new Stage());
+        String filePath;
+        if (!Objects.equals(file, null)){
+            filePath = file.getAbsolutePath();
             save(filePath);
         }
     }
@@ -1233,7 +1239,6 @@ public class PlayerController {
     }
 
     private void save(String filePath){
-
 
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
         textEncryptor.setPassword(myEncryptionPassword);
@@ -1254,17 +1259,18 @@ public class PlayerController {
     }
 
     private void load(String path){
+
         character = null;
 
-        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-        textEncryptor.setPassword(myEncryptionPassword);
+        BasicTextEncryptor textDecryptor = new BasicTextEncryptor();
+        textDecryptor.setPassword(myEncryptionPassword);
 
         XStream xStream = new XStream();
         XMLDecoder decoder=null;
         try{
             decoder=new XMLDecoder(new BufferedInputStream(new FileInputStream(path)));
             String xml = decoder.readObject().toString();
-            String plainText = textEncryptor.decrypt(xml);
+            String plainText = textDecryptor.decrypt(xml);
             character = (Character) xStream.fromXML(plainText);
         }catch(FileNotFoundException fileNotFound){
             fileNotFound.printStackTrace();
@@ -1272,6 +1278,12 @@ public class PlayerController {
         if (!Objects.equals(character.getQuest(), null))
             acceptQuest(character.getQuest());
         decoder.close();
+
+        if (Objects.equals(innerPlayerControllerClass, null)){
+            innerPlayerControllerClass = new InnerPlayerControllerClass();
+            Thread thread = new Thread(innerPlayerControllerClass);
+            thread.start();
+        }
     }
 
     public void about(){
@@ -1295,6 +1307,9 @@ public class PlayerController {
     public void exit() {
         Text text = new Text("\nGAME OVER\n");
         messageBox.getChildren().add(text);
+
+        if (character.getHitPoint() > 0) serialize();
+
         System.exit(0);
     }
 }

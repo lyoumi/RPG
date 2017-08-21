@@ -31,7 +31,7 @@ public enum MonsterNames {
     DrOctopus,
     DrPainkiller,
     DrZoom,
-    EmmettBtown,
+    EmmettBrown,
     FelixCat,
     Firefly,
     ForestGump,

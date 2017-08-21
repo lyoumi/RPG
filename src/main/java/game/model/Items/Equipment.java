@@ -1,6 +1,6 @@
 package game.model.Items;
 
-import game.model.Items.items.Item;
+import game.model.Items.itemsclasses.Item;
 
 import java.util.Map;
 
@@ -30,7 +30,7 @@ public interface Equipment {
      * Метод, возвращающий текущую экипировку персонажа.
      *
      * @return
-     *          current equipment.
+     *          current equipmentclasses.
      */
     Map<EquipmentItems, Item> showEquipment();
 }

@@ -1,7 +1,7 @@
 package game.model.traders;
 
-import game.model.Items.items.HealingItems;
-import game.model.Items.items.Item;
+import game.model.Items.itemsclasses.HealingItems;
+import game.model.Items.itemsclasses.Item;
 import game.model.Quests.Quest;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface Trader {
      * @param id
      *          item id
      * @return
-     *          equipment item
+     *          equipmentclasses item
      */
     Item getEquipmentItem(int id);
 
@@ -26,11 +26,11 @@ public interface Trader {
      * Метод, возвращающий предметы для восстановления здоровья/маны в количестве заданным пользователем
      *
      * @param count
-     *              count of items purchased
+     *              count of itemsclasses purchased
      * @param id
-     *              id of items purchased
+     *              id of itemsclasses purchased
      * @return
-     *              list of items purchased
+     *              list of itemsclasses purchased
      */
     List<HealingItems> getHealItems(int count, int id);
 
@@ -38,7 +38,7 @@ public interface Trader {
      * Метод, возвращающий список с товаров и их id в {@link Map}
      *
      * @return
-     *          priceList of equipment items
+     *          priceList of equipmentclasses itemsclasses
      */
     Map<Integer, Item> getPriceListEquipmentObjects();
 
@@ -46,7 +46,7 @@ public interface Trader {
      * Метод, возвращающий список с товаров и их id в {@link Map}
      *
      * @return
-     *          priceList of equipment items
+     *          priceList of equipmentclasses itemsclasses
      */
     Map<Integer, HealingItems> getPriceListHealingObjects();
 

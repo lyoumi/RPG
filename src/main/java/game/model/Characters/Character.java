@@ -1,11 +1,9 @@
 package game.model.Characters;
 
-import game.model.Items.items.HealingItems;
 import game.model.Quests.Quest;
 import game.model.abilities.Magic;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by pikachu on 13.07.17.
