@@ -934,9 +934,11 @@ public class PlayerController {
         private Monster spawn(Character character) {
             int chance = random.nextInt(100);
             Monster newMonster;
-            if (character.getLevel() % 3 == 0) {
+            if (character.getLevel() == 1){
+                newMonster = EasyBot.monsterFactory.createNewMonster(character);
+            } else if (character.getLevel() % 3 == 0) {
                 newMonster = Boss.monsterFactory.createNewMonster(character);
-            } else if (character.getLevel() < 5) {
+            } else if ((character.getLevel() > 3) || (character.getLevel() < 5)) {
                 if ((chance > 0) && (chance < 25)) {
                     newMonster = MediumBot.monsterFactory.createNewMonster(character);
                 } else {
@@ -980,11 +982,11 @@ public class PlayerController {
                 messageBox.getChildren().add(game_over);
                 inputMessageArea.setDisable(true);
             });
+            System.gc();
             while (true) {
                 System.out.print("");
             }
         }
-
 
         private HealingItems getBigHitPointBottle() {
             HealingItems bottle = null;
@@ -1068,12 +1070,6 @@ public class PlayerController {
                 itemBox.getChildren().add(viewHealingMiddleFlowers);
                 itemBox.getChildren().add(viewHealingSmallFlowers);
             });
-
-
-
-//            Platform.runLater(() -> {
-//
-//            });
 
             try {
                 viewHealingBigHitPointBottles.finalize();
