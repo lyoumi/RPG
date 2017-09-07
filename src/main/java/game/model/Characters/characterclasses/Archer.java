@@ -478,6 +478,7 @@ public class Archer implements Character, UsingItems, Equipment{
 
     @Override
     public void use(HealingItems item) {
+
         if (!Objects.equals(item, null)){
             if (item instanceof BigFlower) {
                 item.use(this);

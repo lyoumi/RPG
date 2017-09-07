@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,20 +10,25 @@
       <HBox BorderPane.alignment="CENTER">
          <children>
             <MenuBar prefHeight="29.0" prefWidth="1000.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
                         <MenuItem mnemonicParsing="false" onAction="#serialize" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#deserialize" text="Load" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
-                  </items>
-                </Menu>
-              </menus>
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Game">
+                     <items>
+                        <CheckMenuItem fx:id="slowGameStyle" mnemonicParsing="false" text="Slow game" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+                     </items>
+                  </Menu>
+               </menus>
             </MenuBar>
          </children>
       </HBox>
@@ -147,11 +153,6 @@
       </ScrollPane>
    </center>
    <bottom>
-      <HBox>
-         <children>
-            <TextArea fx:id="inputMessageArea" prefHeight="67.0" prefWidth="950.0" BorderPane.alignment="CENTER" />
-            <Button fx:id="buttonSendMessage" mnemonicParsing="false" onAction="#listening" prefHeight="25.0" prefWidth="37.0" text="OK" />
-         </children>
-      </HBox>
+      <HBox fx:id="gameMenuBox" />
    </bottom>
 </BorderPane>
