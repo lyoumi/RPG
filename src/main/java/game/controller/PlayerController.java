@@ -31,6 +31,7 @@ import game.model.traders.tradersclasses.SimpleTrader;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.print.PageLayout;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -136,6 +137,7 @@ public class PlayerController {
         private Button upgradeSkillThird = new Button(Style.getMagicStyle(character).get(2).toString());
 
         private Button[] skillButtons = new Button[3];
+        private Button [] healingItemMenu = new Button[7];
 
         private Button useMagicButton = new Button("Use force");
         private Button continueButton = new Button("Continue");
@@ -150,6 +152,48 @@ public class PlayerController {
         @Override
         public void run() {
 
+            Button bigHitPointBottle = new Button("BigHitBottle");
+            bigHitPointBottle.setOnAction(event -> {
+                if (character.getCountOfBigHitPointBottle() > 0)((UsingItems) character).use(getBigHitPointBottle());
+                updateScreen();
+            });
+            Button middleHitPointBottle = new Button("MiddleHitBottle");
+            middleHitPointBottle.setOnAction(event -> {
+                if (character.getCountOfMiddleHitPointBottle() > 0) character.use(getMiddleHitPointBottle());
+                updateScreen();
+            });
+            Button smallHitPointBottle = new Button("SmallHitBottle");
+            smallHitPointBottle.setOnAction(event -> {
+                if (character.getCountOfSmallHitPointBottle() > 0)((UsingItems) character).use(getSmallHitPointBottle());
+                updateScreen();
+            });
+            Button bigFlowerButton = new Button("BigFlower");
+            bigFlowerButton.setOnAction(event -> {
+                if (character.getCountOfBigFlower() > 0)((UsingItems) character).use(getBigFlower());
+                updateScreen();
+            });
+            Button middleFlowerButton = new Button("MiddleFlower");
+            middleFlowerButton.setOnAction(event -> {
+                if (character.getCountOfMiddleFlower() > 0)((UsingItems) character).use(getMiddleFlower());
+                updateScreen();
+            });
+            Button smallFlowerButton = new Button("SmallFlower");
+            smallFlowerButton.setOnAction(event -> {
+                if (character.getCountOfSmallFlower() > 0)((UsingItems) character).use(getSmallFlower());
+                updateScreen();
+            });
+            Button backButton = new Button("Back");
+            backButton.setOnAction(event -> nextChoice());
+
+            healingItemMenu[0] = bigHitPointBottle;
+            healingItemMenu[1] = middleHitPointBottle;
+            healingItemMenu[2] = smallHitPointBottle;
+            healingItemMenu[3] = bigFlowerButton;
+            healingItemMenu[4] = middleFlowerButton;
+            healingItemMenu[5] = smallFlowerButton;
+            healingItemMenu[6] = backButton;
+
+
             Button firstSkillButton = new Button(Style.getMagicStyle(character).get(0).toString());
             associateButtonSkill(firstSkillButton, Style.getMagicStyle(character).get(0));
             Button secondSkillButton = new Button(Style.getMagicStyle(character).get(1).toString());
@@ -163,8 +207,6 @@ public class PlayerController {
             mainMenu[1] = walkingButton;
             autoBattleButton.setOnAction(event -> autoBattle());
             mainMenu[2] = autoBattleButton;
-//            manualBattleButton.setOnAction(event -> beginManualBattle());
-//            mainMenu[3] = manualBattleButton;
             tavernButton.setOnAction(event -> tavern());
             mainMenu[3] = tavernButton;
             stopButton.setOnAction(event -> exit());
@@ -220,7 +262,7 @@ public class PlayerController {
                 character.setMagicPoint(character.getMagicPoint() - 1);
                 Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(1) + " was upgraded")));
             });
-            upgradeSkillFirst.setOnAction(event -> {
+            upgradeSkillThird.setOnAction(event -> {
                 Style.getMagicStyle(character).get(0).setDamage();
                 character.setMagicPoint(character.getMagicPoint() - 1);
                 Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(2) + " was upgraded")));
@@ -240,6 +282,9 @@ public class PlayerController {
                     if (!Objects.equals(aliveMonster, null)) {
                         aliveMonster.setDebuff(magic);
                         aliveMonster.setHitPoint(aliveMonster.getHitPoint() - aliveMonster.applyDamage(character.useMagic(magic)));
+                        ExtendedText extendedText = new ExtendedText("   info: " + aliveMonster.toString());
+                        extendedText.setFill(Color.ORANGERED);
+                        Platform.runLater(() -> messageBox.getChildren().add(extendedText));
                         updateScreen();
                     }
                 });
@@ -252,40 +297,6 @@ public class PlayerController {
             }
 
         }
-
-//        /**
-//         * Основно метод контроля персонажа
-//         * В этом методе проверяется количество здоровья персонажа и, в случае его смерти, останавливает игру
-//         * В конце каждого хода пользователю предлагается на выбор использовать имеющиеся предметы,
-//         * отправить героя добывать ресурсы и опыт, продолжить приключение или же остановить игру.
-//         */
-//        private synchronized void beginManualBattle() {
-//
-//
-//                    Monster monster = spawn(character);
-//                    String monsterInfo = "\n   info: Battle began with " + monster;
-//                    ExtendedText viewMonsterInformation = new ExtendedText(monsterInfo);
-//                    Platform.runLater(() -> messageBox.getChildren().add(viewMonsterInformation));
-//                    try {
-//                        viewMonsterInformation.finalize();
-//                    } catch (Throwable throwable) {
-//                        throwable.printStackTrace();
-//                    }
-//                    while (battleIsEnded){
-//                        System.out.print("");
-//                    }
-//                    String resultOfBattle = manualBattle(monster);
-//                    endEvent(character, monster, false);
-//                    ExtendedText resultOfBattleView = new ExtendedText("   info: " + resultOfBattle);
-//                    Platform.runLater(() -> messageBox.getChildren().add(resultOfBattleView));
-//                    try {
-//                        resultOfBattleView.finalize();
-//                    } catch (Throwable throwable) {
-//                        throwable.printStackTrace();
-//                    }
-//                    checkNewMagicPoint();
-//                    nextChoice();
-//        }
 
         /**
          * Метод, описывающий возможный выбор по окончании ручного или автоматического боя, или же поиска ресурсов.
@@ -307,80 +318,6 @@ public class PlayerController {
                 Platform.runLater(() -> gameMenuBox.getChildren().add(control));
             }
         }
-
-//        private boolean nextChoice() {
-//            choice:
-//            while (true) {
-//                Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new itemsclasses, " +
-//                        "\n           auto-battle for check your fortune, tavern, \n           stop for break adventures or continue....\n");
-//                updateChoiceBox(" use item", " walking", " auto-battle", " tavern", " stop", " manual battle");
-//                Platform.runLater(() -> messageBox.getChildren().add(choice));
-//                while (!canTakeMessage) {
-//                    System.out.print("");
-//                }
-//                String currentChoice = getChoice();
-//                switch (currentChoice) {
-//                    case "use item":
-//                        useItem(character);
-//                        break;
-//                    case "walking":
-//                        String endOfWalk = walking();
-//                        Text resultOfWalking = new Text(endOfWalk);
-//                        Platform.runLater(() -> messageBox.getChildren().add(resultOfWalking));
-//                        break;
-//                    case "auto-battle":
-//                        autoBattle();
-//                        break;
-//                    case "manual battle":
-//                        beginManualBattle();
-//                        break choice;
-//                    case "tavern":
-//                        tavern();
-//                        break;
-//                    case "stop":
-//                        exit();
-//                        break;
-//                    default:
-//                        Text wrongInput = new Text("Pls, make correct choice....");
-//                        wrongInput.setFill(Color.RED);
-//                        Platform.runLater(() -> messageBox.getChildren().add(wrongInput));
-//                        break;
-//                }
-//            }
-//            return true;
-//        }
-
-//        /**
-//         * Метод симулирующий бой между героем и монстром
-//         * В ходе боя игрок может покинуть бой для дальнейшего приключения, или же использовать имеющиеся у него веши
-//         *
-//         * @param monster Monster implementation of {@link Monster}
-//         */
-//        private synchronized String manualBattle(Monster monster) {
-//            updateGameMenu(manualBattleButtons);
-//            String[] result = {""};
-//            new Thread(() -> {
-//                do {
-//                    continueButton.setOnAction(event -> punch(monster));
-//                    while (!manualBattleButtons[0].isPressed() || !manualBattleButtons[1].isPressed() || !manualBattleButtons[3].isPressed() || !manualBattleButtons[4].isPressed() || !manualBattleButtons[5].isPressed()){
-//                        System.out.print("");
-//                    }
-//                    if (breakButton.isPressed()) break;
-//                    updateScreen();
-//                    if (monster.isDead()) {
-//                        result[0] = "   The manualBattle is over";
-//                        break;
-//                    }
-//                    if (character.getHitPoint() <= 0) exit();
-//                    Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: Choose next turn: use item for healHitPoint, " +
-//                            "use magic for addition damage, leave battle for alive or continue....")));
-//
-//                } while ((character.getHitPoint() > 0) && (monster.getHitPoint() > 0));
-//
-//            }).start();
-//            updateScreen();
-//            return result[0];
-//        }
 
         /**
          * Режим автоматического ведения боя. В случае с малым количеством здоровья персонаж будет способен
@@ -407,15 +344,15 @@ public class PlayerController {
                             throwable.printStackTrace();
                         }
                         do {
-                            updateScreen();
-                            if (character.getHitPoint() < character.getMaxHitPoint() / 2) {
-                                if (!autoHeal()) break;
-                            }
+                            autoHeal();
                             updateScreen();
                             if (!punch(monster)) break battle;
                             if (monster.isDead()) break;
-                            if (character.getHitPoint() == 0) exit();
-                        } while (true);
+                            if (character.getHitPoint() == 0) {
+                                exit();
+                                return;
+                            }
+                        } while (!breakAutoBattleButton.isPressed());
                         updateScreen();
                         endEvent(character, monster, true);
                         System.gc();
@@ -580,6 +517,7 @@ public class PlayerController {
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+                Platform.runLater(() -> viewQuest.setText("No Quests"));
                 quest = null;
                 character.setQuest(quest);
             }
@@ -704,10 +642,10 @@ public class PlayerController {
 
             if (character instanceof Wizard) {
                 if (character.getManaPoint() > 0)
-                    character.setManaPoint(character.getManaPoint() - 10);
+                    character.setManaPoint(character.getManaPoint() - 50);
                 else {
                     if (character.healManaPoint()) {
-                        character.setManaPoint(character.getManaPoint() - 10);
+                        character.setManaPoint(character.getManaPoint() - 50);
                         return true;
                     } else return false;
                 }
@@ -768,7 +706,7 @@ public class PlayerController {
          * @param character Character implementation of {@link Character}
          * @return boolean result of using item
          */
-        private boolean useItem(Character character) {
+        private void useItem(Character character) {
             Platform.runLater(() -> {
 
                 Text viewUsingItems = new Text("   info: Use your itemsclasses? " +
@@ -781,54 +719,9 @@ public class PlayerController {
                 viewUsingItems.setFill(Color.GREEN);
                 messageBox.getChildren().add(viewUsingItems);
             });
-            while (!canTakeMessage) {
-                System.out.print("");
-            }
-//            String choice = getChoice();
-            int position = 0;
-            while (true) {
-                if (isDigit(choice)) {
-//                    position = Integer.valueOf(getChoice());
-                    break;
-                } else Platform.runLater(() -> {
-                    Text notCorrectChoice = new Text("   info: Pls, make the correct choice....");
-                    notCorrectChoice.setFill(Color.RED);
-                    messageBox.getChildren().add(new Text());
-                });
-            }
 
-            if (position == 1) {
-                ((UsingItems) character).use(getBigHitPointBottle());
-                updateScreen();
-                return true;
-            } else if (position == 2) {
-                ((UsingItems) character).use(getMiddleHitPointBottle());
-                updateScreen();
-                return true;
-            } else if (position == 3) {
-                ((UsingItems) character).use(getSmallHitPointBottle());
-                updateScreen();
-                return true;
-            } else if (position == 4) {
-                ((UsingItems) character).use(getBigFlower());
-                updateScreen();
-                return true;
-            } else if (position == 5) {
-                ((UsingItems) character).use(getMiddleFlower());
-                updateScreen();
-                return true;
-            } else if (position == 6) {
-                ((UsingItems) character).use(getSmallFlower());
-                updateScreen();
-                return true;
-            } else {
-                Platform.runLater(() -> {
-                    Text itemNotFound = new Text("   info: Item not found");
-                    itemNotFound.setFill(Color.DARKRED);
-                    messageBox.getChildren().add(itemNotFound);
-                });
-                return false;
-            }
+            updateGameMenu(healingItemMenu);
+
         }
 
         /**
@@ -1025,6 +918,7 @@ public class PlayerController {
             game_over.setFill(Color.RED);
             Platform.runLater(() -> {
                 messageBox.getChildren().add(game_over);
+                gameMenuBox.getChildren().clear();
             });
             System.gc();
         }
@@ -1220,7 +1114,6 @@ public class PlayerController {
 
     }
 
-
     private void acceptQuest(Quest quest) {
         this.quest = quest;
         this.task = quest.getTask();
@@ -1239,7 +1132,7 @@ public class PlayerController {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml-file", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showOpenDialog(new Stage());
+        File file = fileChooser.showSaveDialog(new Stage());
         String filePath;
         if (!Objects.equals(file, null)) {
             filePath = file.getAbsolutePath();

@@ -79,7 +79,6 @@ public class MediumBot implements Monster {
             int turn = debuffMagic.getTimeOfAction();
             System.out.println(turn);
             if (turn > 0){
-                System.out.println("He's in ice!");
                 return 0;
             }else return damage + weapon.getDamage() + getMagicDamage();
         } else return damage + weapon.getDamage() + getMagicDamage();
@@ -104,7 +103,6 @@ public class MediumBot implements Monster {
             int turn = debuffMagic.getTimeOfAction();
             System.out.println(turn);
             if (turn > 0){
-                System.out.println("He's in flame!");
                 return applyDamage + debuffMagic.getDamage() - getDefence();
             }else return applyDamage - getDefence();
         }

@@ -74,7 +74,6 @@ public class EasyBot implements Monster {
             int turn = debuffMagic.getTimeOfAction();
             System.out.println(turn);
             if (turn > 0){
-                System.out.println("He's in ice!");
                 return 0;
             }else return damage;
         }
@@ -92,7 +91,6 @@ public class EasyBot implements Monster {
                 int turn = debuffMagic.getTimeOfAction();
                 System.out.println(turn);
                 if (turn > 0){
-                    System.out.println("He's in flame!");
                     return applyDamage + debuffMagic.getDamage();
                 }else return applyDamage;
         }

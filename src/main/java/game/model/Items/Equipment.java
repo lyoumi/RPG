@@ -19,7 +19,7 @@ public interface Equipment {
      * @param item
      *          implementation of {@link Item}
      */
-    void equip(Item item);
+    boolean equip(Item item);
 
     /**
      * Метод, реализующий удаление предмета из экипировки.
