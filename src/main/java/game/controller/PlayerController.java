@@ -31,7 +31,6 @@ import game.model.traders.tradersclasses.SimpleTrader;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.print.PageLayout;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -44,14 +43,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import jdk.nashorn.internal.codegen.CompilerConstants;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -100,7 +97,6 @@ public class PlayerController {
         private Button useItemButton = new Button("Use item");
         private Button walkingButton = new Button("Walking");
         private Button autoBattleButton = new Button("Auto-battle");
-        private Button manualBattleButton = new Button("Manual battle");
         private Button tavernButton = new Button("Tavern");
         private Button stopButton = new Button("Stop");
 
@@ -147,10 +143,24 @@ public class PlayerController {
         private final List<HealingItems> itemsList = SimpleMonsterEquipment.monsterEquipmentFactory.getMonsterEquipment().initializeItemList();
         private final int sizeOfItems = itemsList.size();
 
+        private List<String> story = Arrays.asList(Arrays.toString(Stories.values()));
+        private List<String> events = new ArrayList<>();
+
         private Monster aliveMonster = null;
+        private boolean upgraded = true;
 
         @Override
         public void run() {
+
+            Events[] eventsArray = Events.values();
+
+            for (Events event :
+                    eventsArray) {
+                events.add(event.toString());
+            }
+
+            story.set(0, story.get(0).substring(1));
+            story.set(story.size()-1, story.get(story.size()-1).substring(0, story.get(story.size()-1).length()-1));
 
             Button bigHitPointBottle = new Button("BigHitBottle");
             bigHitPointBottle.setOnAction(event -> {
@@ -256,16 +266,19 @@ public class PlayerController {
                 Style.getMagicStyle(character).get(0).setDamage();
                 character.setMagicPoint(character.getMagicPoint() - 1);
                 Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(0) + " was upgraded")));
+                if (character.getMagicPoint() == 0) upgraded = true;
             });
             upgradeSkillSecond.setOnAction(event -> {
                 Style.getMagicStyle(character).get(1).setDamage();
                 character.setMagicPoint(character.getMagicPoint() - 1);
                 Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(1) + " was upgraded")));
+                if (character.getMagicPoint() == 0) upgraded = true;
             });
             upgradeSkillThird.setOnAction(event -> {
                 Style.getMagicStyle(character).get(0).setDamage();
                 character.setMagicPoint(character.getMagicPoint() - 1);
                 Platform.runLater(() -> messageBox.getChildren().add(new Text(Style.getMagicStyle(character).get(2) + " was upgraded")));
+                if (character.getMagicPoint() == 0) upgraded = true;
             });
 
             skillButtons[0] = upgradeSkillFirst;
@@ -305,8 +318,8 @@ public class PlayerController {
          */
         private boolean nextChoice() {
             Text choice = new Text("\n   info: What's next: use item for healHitPoint, walking for find new items, " +
-                    "\n           auto-battle for check your fortune, tavern, \n           stop for break adventures or continue....\n");
-            updateChoiceBox(" use item", " walking", " auto-battle", " tavern", " stop", " manual battle");
+                    "\n           auto-battle for check your fortune or go tavern");
+            updateChoiceBox(" use item", " walking", " auto-battle", " tavern", " stop");
             Platform.runLater(() -> messageBox.getChildren().add(choice));
             updateGameMenu(mainMenu);
             return true;
@@ -331,39 +344,86 @@ public class PlayerController {
             new Thread(() -> {
                 battle:
                 while (!breakAutoBattleButton.isPressed()) {
-                    if (random.nextInt(10000000) == 9999999) {
-                        Monster monster = spawn(character);
-                        if (monster instanceof Boss) while (character.getHitPoint() < character.getMaxHitPoint())
-                            if (!autoHeal()) break battle;
-                        ExtendedText boss = new ExtendedText("   info: battle began with " + monster.toString());
-                        boss.setFill(Color.ORANGERED);
-                        Platform.runLater(() -> messageBox.getChildren().add(boss));
-                        try {
-                            boss.finalize();
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        do {
-                            autoHeal();
-                            updateScreen();
-                            if (!punch(monster)) break battle;
-                            if (monster.isDead()) break;
-                            if (character.getHitPoint() == 0) {
-                                exit();
-                                return;
+                    if (random.nextInt(10000000) == 9999998){
+                        String[] currentStory = story.get(random.nextInt(story.size())).split("___");
+                        for (String s :
+                                currentStory) {
+                            s = s.replaceAll("__", ".\n         ");
+                            s = s.replaceAll("_", " ");
+                            String finalS = s;
+                            Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: " + finalS)));
+
+                            if (random.nextInt(2) == 1){
+                                Monster monster = spawn(character);
+                                if (monster instanceof Boss) while (character.getHitPoint() < character.getMaxHitPoint())
+                                    if (!autoHeal()) break battle;
+                                ExtendedText boss = new ExtendedText("   info: I was attacked by some " + monster.toString());
+                                boss.setFill(Color.ORANGERED);
+                                Platform.runLater(() -> messageBox.getChildren().add(boss));
+                                try {
+                                    boss.finalize();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                do {
+                                    autoHeal();
+                                    updateScreen();
+                                    if (!punch(monster)) break battle;
+                                    if (monster.isDead()) break;
+                                    if (character.getHitPoint() == 0) {
+                                        exit();
+                                        return;
+                                    }
+                                } while (!breakAutoBattleButton.isPressed());
+                                updateScreen();
+                                endEvent(character, monster, true);
+                                System.gc();
+                                try {
+                                    monster.finalize();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                if (character.getMagicPoint() > 0) {
+                                    upgraded = false;
+                                    upgradeSkill();
+                                    while (!upgraded){
+                                        System.out.print("");
+                                    }
+                                    updateGameMenu(autoBattleMenu);
+                                }
                             }
-                        } while (!breakAutoBattleButton.isPressed());
-                        updateScreen();
-                        endEvent(character, monster, true);
-                        System.gc();
-                        try {
-                            monster.finalize();
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
+                                try {
+                                    TimeUnit.SECONDS.sleep(5);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                         }
-                        if (character.getMagicPoint() > 0) {
-                            checkNewMagicPoint();
-                            return;
+
+                    }
+                    if (random.nextInt(1000000) == 99999){
+
+                        String currentEvent = events.get(random.nextInt(events.size()));
+                        if (Objects.equals(currentEvent, events.get(0))){
+                            character.setGold(character.getGold() + random.nextInt(character.getLevel()*10));
+                            updateScreen();
+                        } else if (Objects.equals(currentEvent, events.get(1))){
+                            character.applyDamage(random.nextInt(character.getHitPoint()/4));
+                            updateScreen();
+                        } else if (Objects.equals(currentEvent, events.get(2))){
+                            character.add(BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
+                            updateScreen();
+                        } else if (Objects.equals(currentEvent, events.get(3))){
+                            character.add(BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
+                            updateScreen();
+                        }
+                        currentEvent = currentEvent.replaceAll("_", " ");
+                        currentEvent = currentEvent.replaceAll("__", ".\n       ");
+                        String finalCurrentEvent = currentEvent;
+                        Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: " + finalCurrentEvent)));
+                        try {
+                            TimeUnit.SECONDS.sleep(2);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -524,23 +584,13 @@ public class PlayerController {
         }
 
         /**
-         * Метод проверяющий наличие неиспользованных очков навыков и реализующий их распределение.
+         * Call upgrade skill menu
          */
-        private void checkNewMagicPoint() {
-
+        private void upgradeSkill() {
             updateGameMenu(upgradeSkillFirst, upgradeSkillSecond, upgradeSkillThird);
-
             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You have " + character.getMagicPoint())));
             Platform.runLater(() -> messageBox.getChildren().add(new Text("   info: You can upgrade your skills " +
                     (Style.getMagicStyle(character)) + " by index...")));
-
-
-            new Thread(() -> {
-                while (character.getMagicPoint() != 0){
-                    System.out.print("");
-                }
-                nextChoice();
-            }).start();
         }
 
         /**
@@ -831,8 +881,6 @@ public class PlayerController {
                             while (!canTakeMessage) {
                                 System.out.print("");
                             }
-//                            String exit = getChoice();
-//                            if (Objects.equals(exit, "No") || droppedEquipment.isEmpty()) break;
                         }
                 }
                 if (character.experienceDrop(monster.getExperience())) exit();
@@ -846,7 +894,6 @@ public class PlayerController {
                     while (!canTakeMessage) {
                         System.out.print("");
                     }
-//                    String choice = getChoice();
                     if (Objects.equals(choice, "add")) {
                         ((UsingItems) character).add(monster.getInventory().pollLast());
                         updateScreen();
